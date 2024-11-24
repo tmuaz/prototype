@@ -62,7 +62,7 @@ public class Config {
     writer.close();
   }
 
-  public static Config LoadFromFile(File configFile) throws Exception {
-    throw new Exception("Not implemented");
+  public static Config LoadFromFile(File configFile)  {
+    throw new RuntimeException("Not implemented");
   }
 }
