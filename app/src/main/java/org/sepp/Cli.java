@@ -4,6 +4,8 @@
 
 package org.sepp;
 
+import java.io.File;
+
 import org.apache.commons.cli.*;
 
 public class Cli {
@@ -15,6 +17,7 @@ public class Cli {
     options.addOption("h", "help", false, "print this message");
     options.addOption("v", "test", false, "this is a test");
     options.addOption("f", "file", true, "file to process");
+    options.addOption("l", "load", true, "config to load");
 
     try {
       CommandLine line = parser.parse(options, args);
@@ -30,6 +33,12 @@ public class Cli {
 
       if (line.hasOption("file")) {
         System.out.println("File to process: " + line.getOptionValue("file"));
+      }
+
+      if (line.hasOption("load")){
+        
+        File configFile = new File(line.getOptionValue("load"));
+        Config config = Config.LoadFromFile(configFile);
       }
     } catch (ParseException exp) {
       System.err.println("Parsing failed.  Reason: " + exp.getMessage());
