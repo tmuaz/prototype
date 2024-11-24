@@ -33,7 +33,7 @@ public class DiffCommand {
     public static void genDiffFile(String skeletonPath,String studentSubmissionPath,String outputPath) throws IOException {
         List<String> skeletonLines = Files.readAllLines(Paths.get(skeletonPath));
         List<String> studentSubmissionLines = Files.readAllLines(Paths.get(studentSubmissionPath));
-
+       //got this code from java diff lib  for side by side diff might change it if not will have to cite it  (below) //
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
                 .inlineDiffByWord(true)
