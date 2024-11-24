@@ -6,3 +6,4 @@ build
 .settings
 app/.settings
 .settings
+app/bin
