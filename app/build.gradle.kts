@@ -22,7 +22,7 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
 
-    implementation("io.github.java-diff-utils:java-diff-utils:4.12")
+    implementation("io.github.java-diff-utils:java-diff-utils:4.15")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
