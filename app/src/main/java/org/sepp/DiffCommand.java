@@ -43,8 +43,8 @@ public class DiffCommand {
 
         List<DiffRow> diffRows = generator.generateDiffRows(skeletonLines, studentSubmissionLines);
         StringBuilder output = new StringBuilder();
-        output.append("|Skeleton  |  Student Submission |\n");
-        output.append("|----------|---------------------|\n");
+        output.append("|Skeleton             |Student Submission   |\n");
+        output.append("|---------------------|---------------------|\n");
         for (DiffRow diffRow : diffRows) {
             output.append("|").append(diffRow.getOldLine()).append("|").append(diffRow.getNewLine()).append("|\n");
         }
