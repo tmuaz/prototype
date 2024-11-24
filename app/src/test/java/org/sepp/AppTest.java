@@ -3,13 +3,16 @@
  */
 package org.sepp;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class AppTest {
   @Test
   public void appHasAGreeting() {
     App classUnderTest = new App();
+  }
+
+  @Test
+  public void DiffTest() {
+    throw new RuntimeException("Not implemented");
   }
 }
