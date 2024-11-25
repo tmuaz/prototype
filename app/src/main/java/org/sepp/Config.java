@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.tomlj.*;
+
 public class Config {
   public String name;
   public ArrayList<Task> tasks;
@@ -53,7 +55,16 @@ public class Config {
   // file handling
   // NOTE: @Dahir, help me figure out how to serialize and deserialize
   private String serialize() {
-    throw new RuntimeException("Not implemented");
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("# Automatically generated automated assignment tasks config file\n");
+    sb.append(String.format("name = \"%s\"\n\n", name));
+    
+    for (var task : tasks) {
+      sb.append("[[tasks]]\n").append(task.serialize()).append("\n\n");
+    }
+
+    return sb.toString();
   }
 
   public void storeConfig(String path) throws IOException {
@@ -62,7 +73,21 @@ public class Config {
     writer.close();
   }
 
-  public static Config loadFromFile(File configFile) {
-    throw new RuntimeException("Not implemented");
+  public static Config loadFromFile(File configFile) throws IOException {
+    var res = Toml.parse(configFile.toPath());
+    
+    if (res.hasErrors()) {
+      throw res.errors().get(0);
+    }
+    
+    var newconfig = new Config(res.getString("name"));
+
+    var tasklist = res.getArray("tasks");
+
+    for (int i = 0; i < tasklist.size(); i++) {
+      newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
+    }
+
+    return newconfig;
   }
 }
