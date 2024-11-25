@@ -28,26 +28,15 @@ public class Cli {
     this.options.addOption("v", "test", false, "this is a test");
     this.options.addOption("t", "title", true, "Set title of configuration");
     this.options.addOption("d", "directory", true, "Directory to run in");
-    
-    Option addTask = Option.builder("a")
-                          .longOpt("add-task")
-                          .hasArgs()
-                          .numberOfArgs(3)
-                          .desc(
-                            "Task to add <name> <type> <path-to-shell-script>. Shell script path is not store,"
-                                + " only the contents of the file")
-                          .build();
-    this.options.addOption(addTask);          
-
-    //this.options.addOption(
-    //    Option.builder("a")
-    //        .longOpt("add-task")
-    //        .hasArg()
-    //         .desc(
-    //            "Task to add <name> <type> <path-to-shell-script>. Shell script path is not store,"
-    //                + " only the contents of the file")
-    //        .build());
-
+    this.options.addOption(
+        Option.builder("a")
+            .longOpt("add-task")
+            .hasArgs()
+            .numberOfArgs(3)
+            .desc(
+              "Task to add <name> <type> <path-to-shell-script>. Shell script path is not store,"
+                  + " only the contents of the file")
+            .build());         
     this.options.addOption("l", "load", true, "Configuration to load");
     this.options.addOption("c", "create", false, "Create configuration");
     this.options.addOption(
