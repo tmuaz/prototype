@@ -4,44 +4,45 @@
 
 package org.sepp;
 
-import java.io.File;
-
 import org.apache.commons.cli.*;
 
 public class Cli {
 
-  public static void main(String[] args) {
-    CommandLineParser parser = new DefaultParser();
+  private static Cli INSTANCE = null;
 
-    Options options = new Options();
-    options.addOption("h", "help", false, "print this message");
-    options.addOption("v", "test", false, "this is a test");
-    options.addOption("f", "file", true, "file to process");
-    options.addOption("l", "load", true, "config to load");
+  public CommandLineParser parser;
+  public Options options;
+  public HelpFormatter hFormatter;
 
-    try {
-      CommandLine line = parser.parse(options, args);
-
-      if (line.hasOption("help")) {
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("utility-name", options);
-      }
-
-      if (line.hasOption("test")) {
-        System.out.println("The test works");
-      }
-
-      if (line.hasOption("file")) {
-        System.out.println("File to process: " + line.getOptionValue("file"));
-      }
-
-      if (line.hasOption("load")){
-        
-        File configFile = new File(line.getOptionValue("load"));
-        Config config = Config.LoadFromFile(configFile);
-      }
-    } catch (ParseException exp) {
-      System.err.println("Parsing failed.  Reason: " + exp.getMessage());
+  public static synchronized Cli getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new Cli();
     }
+    return INSTANCE;
+  }
+
+  public Cli() {
+    this.parser = new DefaultParser();
+    this.options = new Options();
+    this.options.addOption("h", "help", false, "Prints this message");
+    this.options.addOption("v", "test", false, "this is a test");
+    this.options.addOption("t", "title", true, "Set title of configuration");
+    this.options.addOption("d", "directory", true, "Directory to run in");
+    this.options.addOption(
+        "a",
+        "add-task",
+        true,
+        "Task to add <name> <path-to-shell-script>. Shell script path is not store, only the"
+            + " contents of the file");
+    this.options.addOption("l", "load", true, "Configuration to load");
+    this.hFormatter = new HelpFormatter();
+  }
+
+  public CommandLine parse(String[] args) throws ParseException {
+    return this.parser.parse(this.options, args);
+  }
+
+  public void printHelp() {
+    hFormatter.printHelp("utility-name", options);
   }
 }

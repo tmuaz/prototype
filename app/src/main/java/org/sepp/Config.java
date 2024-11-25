@@ -56,13 +56,13 @@ public class Config {
     throw new RuntimeException("Not implemented");
   }
 
-  public void StoreConfig(String path) throws IOException {
+  public void storeConfig(String path) throws IOException {
     FileWriter writer = new FileWriter(path);
     writer.write(this.serialize());
     writer.close();
   }
 
-  public static Config LoadFromFile(File configFile)  {
+  public static Config loadFromFile(File configFile) {
     throw new RuntimeException("Not implemented");
   }
 }
