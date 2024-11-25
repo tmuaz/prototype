@@ -29,12 +29,15 @@ public class Cli {
     this.options.addOption("t", "title", true, "Set title of configuration");
     this.options.addOption("d", "directory", true, "Directory to run in");
     this.options.addOption(
-        "a",
-        "add-task",
-        true,
-        "Task to add <name> <type> <path-to-shell-script>. Shell script path is not store, only the"
-            + " contents of the file");
+        Option.builder("a")
+            .longOpt("add-task")
+            .hasArg()
+            .desc(
+                "Task to add <name> <type> <path-to-shell-script>. Shell script path is not store,"
+                    + " only the contents of the file")
+            .build());
     this.options.addOption("l", "load", true, "Configuration to load");
+    this.options.addOption("c", "create", false, "Create configuration");
     this.hFormatter = new HelpFormatter();
   }
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
@@ -47,11 +48,14 @@ public class App {
 
       // adding tasks
       if (line.hasOption("add-task")) {
-        String[] taskstr = line.getOptionValue("add-task").split(" ");
+        // FIXME: Only picks up first argument
+        String[] taskstr = line.getOptionValues("add-task");
 
         // task needs 3 arguments
         if (taskstr.length < 3) {
           System.err.println("Invalid task, see --help");
+          System.out.println(
+              "argument length: " + taskstr.length + "\nArguments: " + Arrays.toString(taskstr));
           System.exit(1);
         }
 
@@ -82,6 +86,13 @@ public class App {
         config.addTask(new Task(taskstr[0], type, sh));
 
         // ensure config is updated
+        saveConfig = true;
+      }
+
+      // allow changing titles
+      if (line.hasOption("title")) {
+        String title = line.getOptionValue("title");
+        config.name = title;
         saveConfig = true;
       }
 
