@@ -41,10 +41,10 @@ jobs:
       with:
         name: test-report
         path: app/build/reports/tests/test/
-    - name: Google Java Format
+    # - name: Google Java Format
       # You may pin to the exact commit or the version.
       # uses: axel-op/googlejavaformat-action@fe78db8a90171b6a836449f8d0e982d5d71e5c5a
-      uses: axel-op/googlejavaformat-action@v3.6.0
+      # uses: axel-op/googlejavaformat-action@v3.6.0
       # with:
       #   # Arguments for the Google Java Format executable
       #   args: # optional, default is --replace
