@@ -24,6 +24,7 @@ dependencies {
 
     implementation("io.github.java-diff-utils:java-diff-utils:4.15")
     implementation("commons-cli:commons-cli:1.5.0")
+    implementation("org.tomlj:tomlj:1.1.1")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
