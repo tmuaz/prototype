@@ -50,6 +50,12 @@ public class Cli {
 
     this.options.addOption("l", "load", true, "Configuration to load");
     this.options.addOption("c", "create", false, "Create configuration");
+    this.options.addOption(
+        Option.builder("d")
+            .longOpt("diff")
+            .numberOfArgs(2)
+            .desc("Diff two files <skeleton-path> <submission-path>")
+            .build());
     this.hFormatter = new HelpFormatter();
   }
 

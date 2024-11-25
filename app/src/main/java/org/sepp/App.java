@@ -22,10 +22,37 @@ public class App {
 
     try {
       CommandLine line = cli.parse(args);
-      // basic usage guide
+      
+      
       if (line.hasOption("help")) {
         cli.printHelp();
         return;
+      }
+
+      // 2. Diff option
+      if (line.hasOption("diff")) {
+          String[] diffArgs = line.getOptionValues("diff");
+          if (diffArgs.length != 2) {
+              System.err.println("Diff command requires two file paths");
+              System.exit(1);
+          }
+          
+          try {
+              if (!DiffCommand.validDiffArgs(diffArgs[0], diffArgs[1])) {
+                  System.exit(1);
+              }
+              DiffCommand.printDiff(diffArgs[0], diffArgs[1]);
+          } catch (IOException e) {
+              System.err.println("Failed to perform diff: " + e.getMessage());
+              System.exit(1);
+          }
+          return;
+      }
+
+      
+      if (!line.hasOption("load") && !line.hasOption("create")) {
+          System.err.println("No config provided, see --help");
+          System.exit(1);
       }
 
       // attempt to get our config
@@ -45,6 +72,7 @@ public class App {
         System.err.println("No config provided, see --help");
         System.exit(1);
       }
+      
 
       // adding tasks
       if (line.hasOption("add-task")) {
