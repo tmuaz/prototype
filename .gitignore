@@ -7,3 +7,4 @@ build
 app/.settings
 .settings
 app/bin
+app/bin/main/org/sepp
