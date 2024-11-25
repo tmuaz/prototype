@@ -76,7 +76,6 @@ public class App {
 
       // adding tasks
       if (line.hasOption("add-task")) {
-        // FIXME: Only picks up first argument
         String[] taskstr = line.getOptionValues("add-task");
 
         // task needs 3 arguments
