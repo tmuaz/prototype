@@ -49,30 +49,37 @@ public class App {
       if (line.hasOption("add-task")) {
         String[] taskstr = line.getOptionValue("add-task").split(" ");
 
-        // task needs 2 arguments
-        if (taskstr.length < 2) {
+        // task needs 3 arguments
+        if (taskstr.length < 3) {
           System.err.println("Invalid task, see --help");
           System.exit(1);
         }
 
-        // Verify that file exists and is a file
-        File shfile = new File(taskstr[1]);
-        if (!shfile.isFile()) {
-          System.err.println("Invalid shell file");
-          System.exit(1);
+        // Verify that file exists and is a file, this is scoped to ensure that shfile isn't
+        // accessed anywhere else
+        {
+          File shfile = new File(taskstr[2]);
+          if (!shfile.isFile()) {
+            System.err.println("Invalid shell file");
+            System.exit(1);
+          }
         }
 
         // try to read contents of file at path
         List<String> sh;
         try {
-          Path path = Paths.get(taskstr[1]);
+          Path path = Paths.get(taskstr[2]);
           sh = Files.readAllLines(path);
         } catch (Exception e) {
           System.err.println("Failed to read " + taskstr[1] + " \nError: " + e.getMessage());
           System.exit(1);
+          return; // this line is here because java compiler assumes sh may be unitiliazed
         }
 
-        // TODO: create and add our task
+        // determine type, will default to custom
+        Task.TaskType type = Task.parseType(taskstr[1]);
+
+        config.addTask(new Task(taskstr[0], type, sh));
 
         // ensure config is updated
         saveConfig = true;

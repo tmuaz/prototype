@@ -32,7 +32,7 @@ public class Cli {
         "a",
         "add-task",
         true,
-        "Task to add <name> <path-to-shell-script>. Shell script path is not store, only the"
+        "Task to add <name> <type> <path-to-shell-script>. Shell script path is not store, only the"
             + " contents of the file");
     this.options.addOption("l", "load", true, "Configuration to load");
     this.hFormatter = new HelpFormatter();
