@@ -33,7 +33,7 @@ public class App {
       if (line.hasOption("diff")) {
           String[] diffArgs = line.getOptionValues("diff");
           if (diffArgs.length != 2) {
-              System.err.println("Diff command requires exactly two file paths");
+              System.err.println("Diff command requires two file paths");
               System.exit(1);
           }
           
