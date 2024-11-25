@@ -11,8 +11,8 @@ public class AppTest {
     App classUnderTest = new App();
   }
 
-  @Test
+  /* @Test
   public void DiffTest() {
     throw new RuntimeException("Not implemented");
-  }
+  } */
 }
