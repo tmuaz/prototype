@@ -30,6 +30,7 @@ public class AppTest {
     String serialized = config.serialize();
     Config deseralized = Config.deserialize(serialized);
 
+    assertTrue(config.serialize().equals(deseralized.serialize()));
     // FIXME: this is not equal
     assertTrue(config == deseralized);
   }
