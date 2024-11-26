@@ -1,9 +1,9 @@
 package org.sepp;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import org.tomlj.*;
-import java.util.ArrayList;
 
 public class Task {
   public enum TaskType {
@@ -44,7 +44,6 @@ public class Task {
 
     sb.append(String.format("name = \"%s\"\n", name));
 
-
     if (type == TaskType.CUSTOM) {
       sb.append("type = \"custom\"\n");
     } else {
@@ -52,13 +51,11 @@ public class Task {
     }
 
     sb.append("scripts = [");
-    
 
-    for (String scriptStr: script) {
+    for (String scriptStr : script) {
       sb.append("\"\"\"")
-        .append(scriptStr.replace("\\", "\\\\")
-                         .replace("\"", "\\\""))
-        .append("\"\"\",");
+          .append(scriptStr.replace("\\", "\\\\").replace("\"", "\\\""))
+          .append("\"\"\",");
     }
 
     sb.append("]");
@@ -80,10 +77,46 @@ public class Task {
     var scripts = new ArrayList<String>();
     var tomlArray = input.getArray("scripts");
 
-    for (int i=0; i<tomlArray.size(); i++) {
+    for (int i = 0; i < tomlArray.size(); i++) {
       scripts.add(tomlArray.getString(i));
     }
 
     return new Task(input.getString("name"), type, scripts);
+  }
+
+  // -- testing
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Task task = (Task) obj;
+    if (!this.name.equals(obj)) {
+      return false;
+    }
+    ;
+
+    if (this.type != task.type) {
+      return false;
+    }
+
+    int size = this.script.size();
+    if (size != task.script.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < size; i++) {
+      if (!this.script.get(i).equals(task.script.get(i))) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

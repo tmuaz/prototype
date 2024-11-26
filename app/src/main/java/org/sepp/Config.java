@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.tomlj.*;
 
 public class Config {
@@ -53,18 +52,32 @@ public class Config {
   }
 
   // file handling
-  // NOTE: @Dahir, help me figure out how to serialize and deserialize
-  private String serialize() {
+
+  public String serialize() {
     StringBuilder sb = new StringBuilder();
 
     sb.append("# Automatically generated automated assignment tasks config file\n");
     sb.append(String.format("name = \"%s\"\n\n", name));
-    
+
     for (var task : tasks) {
       sb.append("[[tasks]]\n").append(task.serialize()).append("\n\n");
     }
 
     return sb.toString();
+  }
+
+  public static Config deserialize(String text) {
+    var res = Toml.parse(text);
+
+    var newconfig = new Config(res.getString("name"));
+
+    var tasklist = res.getArray("tasks");
+
+    for (int i = 0; i < tasklist.size(); i++) {
+      newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
+    }
+
+    return newconfig;
   }
 
   public void storeConfig(String path) throws IOException {
@@ -75,11 +88,11 @@ public class Config {
 
   public static Config loadFromFile(File configFile) throws IOException {
     var res = Toml.parse(configFile.toPath());
-    
+
     if (res.hasErrors()) {
       throw res.errors().get(0);
     }
-    
+
     var newconfig = new Config(res.getString("name"));
 
     var tasklist = res.getArray("tasks");
@@ -89,5 +102,34 @@ public class Config {
     }
 
     return newconfig;
+  }
+
+  // -- testing
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj == null || getClass() != obj.getClass()) {
+      System.err.println("Not same class");
+      return false;
+    }
+
+    Config config = (Config) obj;
+
+    int size = this.tasks.size();
+    if (size != config.tasks.size()) {
+      System.err.println("Not the same number of tasks");
+      return false;
+    }
+    for (int i = 0; i < size; i++) {
+      if (this.tasks.get(i) != config.tasks.get(i)) {
+        System.err.println("Task " + i + " not the same");
+        return false;
+      }
+    }
+
+    return true;
   }
 }
