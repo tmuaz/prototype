@@ -42,7 +42,7 @@ public class Task {
   public String serialize() {
     StringBuilder sb = new StringBuilder();
 
-    sb.append(String.format("name = \"%s\"\n", name));
+    sb.append(String.format("name = \"%s\"\n", Config.EscapeToml(name)));
 
     if (type == TaskType.CUSTOM) {
       sb.append("type = \"custom\"\n");
@@ -53,9 +53,7 @@ public class Task {
     sb.append("scripts = [");
 
     for (String scriptStr : script) {
-      sb.append("\"\"\"")
-          .append(scriptStr.replace("\\", "\\\\").replace("\"", "\\\""))
-          .append("\"\"\",");
+      sb.append(String.format("\"%s\",", Config.EscapeToml(scriptStr)));
     }
 
     sb.append("]");
@@ -97,7 +95,7 @@ public class Task {
     }
 
     Task task = (Task) obj;
-    if (!this.name.equals(obj)) {
+    if (!this.name.equals(task.name)) {
       return false;
     }
     ;
