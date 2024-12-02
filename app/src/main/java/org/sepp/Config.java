@@ -20,19 +20,28 @@ public class Config {
     this.tasks = new ArrayList<Task>();
   }
 
-  public void run(String path) {
+  public void run(String path) throws Exception{
     int taskCount = tasks.size();
     File folder = new File(path);
-    if (folder.isFile() || !folder.exists()) {
-      // TODO: print a message
-      return;
+    if ( !folder.exists()){
+      throw new Exception("Run directory does not exist");
+    }
+    if (folder.isFile() ) {
+      throw new Exception("Run directory is not a folder");
     }
 
     File folders[] = folder.listFiles(File::isDirectory);
     for (int i = 0; i < folders.length; i++) {
-      String[] outputs = new String[taskCount];
+      ArrayList<String>[] outputs = new ArrayList[taskCount];
       for (int j = 0; j < taskCount; j++) {
-        outputs[j] = tasks.get(j).run(folders[i]);
+        Task task = tasks.get(j);
+        try{
+          outputs[j] = task.run(folders[i]);
+          System.out.println("Task: "+j + "\nname: " + task.name);
+        outputs[j].forEach((str)->System.out.println("\t"+str));
+        } catch (Exception e){
+          System.err.println("Exception error while running task #"+j +" name: " +task.name + "\n" + e.getMessage());
+        }
       }
 
       // TODO: create toml file

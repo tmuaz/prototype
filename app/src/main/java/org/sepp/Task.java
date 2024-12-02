@@ -1,6 +1,8 @@
 package org.sepp;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.tomlj.*;
@@ -27,8 +29,25 @@ public class Task {
     this.script = script;
   }
 
-  public String run(File folder) {
-    throw new RuntimeException("Not implemented");
+  public ArrayList<String> run(File folder) throws Exception {
+    // FIXME: this is rather inefficient, will need to refactor
+    String sh = String.join("\n", script);
+    ProcessBuilder pbuilder = new ProcessBuilder("sh", "-c", sh);
+    pbuilder.directory(folder);
+    var process = pbuilder.start(); // IOException
+    ArrayList<String> output = new ArrayList<>();
+
+    if (type == TaskType.COMPILE) {
+      int code = process.waitFor(); // InterruptedException
+      output.add(String.valueOf(code));
+      return output;
+    }
+
+    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    reader.lines().forEach((str) -> output.add(str));
+    reader.close();
+
+    return output;
   }
 
   public static Task.TaskType parseType(String input) {

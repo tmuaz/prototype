@@ -22,8 +22,7 @@ public class App {
 
     try {
       CommandLine line = cli.parse(args);
-      
-      
+
       if (line.hasOption("help")) {
         cli.printHelp();
         return;
@@ -31,28 +30,27 @@ public class App {
 
       // 2. Diff option
       if (line.hasOption("diff")) {
-          String[] diffArgs = line.getOptionValues("diff");
-          if (diffArgs.length != 2) {
-              System.err.println("Diff command requires two file paths");
-              System.exit(1);
+        String[] diffArgs = line.getOptionValues("diff");
+        if (diffArgs.length != 2) {
+          System.err.println("Diff command requires two file paths");
+          System.exit(1);
+        }
+
+        try {
+          if (!DiffCommand.validDiffArgs(diffArgs[0], diffArgs[1])) {
+            System.exit(1);
           }
-          
-          try {
-              if (!DiffCommand.validDiffArgs(diffArgs[0], diffArgs[1])) {
-                  System.exit(1);
-              }
-              DiffCommand.printDiff(diffArgs[0], diffArgs[1]);
-          } catch (IOException e) {
-              System.err.println("Failed to perform diff: " + e.getMessage());
-              System.exit(1);
-          }
-          return;
+          DiffCommand.printDiff(diffArgs[0], diffArgs[1]);
+        } catch (IOException e) {
+          System.err.println("Failed to perform diff: " + e.getMessage());
+          System.exit(1);
+        }
+        return;
       }
 
-      
       if (!line.hasOption("load") && !line.hasOption("create")) {
-          System.err.println("No config provided, see --help");
-          System.exit(1);
+        System.err.println("No config provided, see --help");
+        System.exit(1);
       }
 
       // attempt to get our config
@@ -72,7 +70,6 @@ public class App {
         System.err.println("No config provided, see --help");
         System.exit(1);
       }
-      
 
       // adding tasks
       if (line.hasOption("add-task")) {
@@ -123,17 +120,28 @@ public class App {
         saveConfig = true;
       }
 
+      if (line.hasOption("run")) {
+        String directory = line.getOptionValue("run");
+        try {
+          config.run(directory);
+        } catch (Exception e) {
+          System.err.println("Failed to run config, Error:\n\t" + e.getMessage());
+        }
+        ;
+      }
+
     } catch (ParseException e) {
       System.err.println("Parsing failed.  Reason: " + e.getMessage());
       System.exit(1);
     }
 
     if (saveConfig) {
-      try {
+      // throw new RuntimeException("Not implemented");
+      /* try {
         config.storeConfig("path");
       } catch (IOException e) {
         System.err.println("Failed to save config.\nError: " + e.getMessage());
-      }
+      } */
     }
   }
 }
