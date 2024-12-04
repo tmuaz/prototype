@@ -5,8 +5,6 @@ package org.sepp;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import org.junit.Test;
 
@@ -43,13 +41,14 @@ public class AppTest {
     }
 
     int lineCount = rand.nextInt(50) + 1;
-    List<String> script = new ArrayList<>(lineCount);
+    StringBuilder sb = new StringBuilder();
 
     for (int i = 0; i < lineCount; i++) {
-      script.add(genRandomString(rand));
+      sb.append(genRandomString(rand));
+      sb.append("\n");
     }
 
-    return new Task(type, script);
+    return new Task(type, sb.toString());
   }
 
   private static String genRandomString(Random rand) {

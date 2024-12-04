@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import org.tomlj.*;
 
 public class Task {
@@ -15,24 +14,22 @@ public class Task {
 
   public String name;
   public TaskType type;
-  public List<String> script;
+  public String script;
 
-  public Task(TaskType type, List<String> script) {
+  public Task(TaskType type, String script) {
     this.name = "Unnamed task";
     this.type = type;
     this.script = script;
   }
 
-  public Task(String name, TaskType type, List<String> script) {
+  public Task(String name, TaskType type, String script) {
     this.name = name;
     this.type = type;
     this.script = script;
   }
 
   public ArrayList<String> run(File folder) throws Exception {
-    // FIXME: this is rather inefficient, will need to refactor
-    String sh = String.join("\n", script);
-    ProcessBuilder pbuilder = new ProcessBuilder("sh", "-c", sh);
+    ProcessBuilder pbuilder = new ProcessBuilder("sh", "-c", script);
     pbuilder.directory(folder);
     var process = pbuilder.start(); // IOException
     ArrayList<String> output = new ArrayList<>();
@@ -69,13 +66,8 @@ public class Task {
       sb.append("type = \"compile\"\n");
     }
 
-    sb.append("scripts = [");
-
-    for (String scriptStr : script) {
-      sb.append(String.format("\"%s\",", Config.EscapeToml(scriptStr)));
-    }
-
-    sb.append("]");
+    sb.append("script = ");
+    sb.append(String.format("\"%s\"", Config.EscapeToml(script)));
 
     return sb.toString();
   }
@@ -91,14 +83,9 @@ public class Task {
       throw new RuntimeException("Couldn't resolve task type.");
     }
 
-    var scripts = new ArrayList<String>();
-    var tomlArray = input.getArray("scripts");
+    var script = input.getString("script");
 
-    for (int i = 0; i < tomlArray.size(); i++) {
-      scripts.add(tomlArray.getString(i));
-    }
-
-    return new Task(input.getString("name"), type, scripts);
+    return new Task(input.getString("name"), type, script);
   }
 
   // -- testing
@@ -123,15 +110,8 @@ public class Task {
       return false;
     }
 
-    int size = this.script.size();
-    if (size != task.script.size()) {
+    if (!this.script.equals(task.script)) {
       return false;
-    }
-
-    for (int i = 0; i < size; i++) {
-      if (!this.script.get(i).equals(task.script.get(i))) {
-        return false;
-      }
     }
 
     return true;

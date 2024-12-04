@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
@@ -94,10 +93,11 @@ public class App {
         }
 
         // try to read contents of file at path
-        List<String> sh;
+        String sh;
+
         try {
           Path path = Paths.get(taskstr[2]);
-          sh = Files.readAllLines(path);
+          sh = Files.readString(path);
         } catch (Exception e) {
           System.err.println("Failed to read " + taskstr[1] + " \nError: " + e.getMessage());
           System.exit(1);
