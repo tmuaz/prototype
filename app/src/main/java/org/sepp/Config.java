@@ -99,7 +99,7 @@ public class Config {
     for (int i = 0; i < outputs.length; i++) {
       ArrayList<String> o = outputs[i];
       Task t = this.tasks.get(i);
-      sb.append("[tasks.t" + i + "]\n\n");
+      sb.append("\n[tasks.t" + i + "]\n");
       // this will create a faulty file if the name contains a newline
       sb.append("name= \""+t.name+"\"\n");
       sb.append("type= \"" +t.type + "\"\n");

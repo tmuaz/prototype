@@ -2,8 +2,8 @@ config_name: "test"
 
 [tasks]
 
-[tasks.t0]
 
+[tasks.t0]
 name= "example"
 type= "Custom"
 output='''
@@ -15,21 +15,32 @@ loop test4
 loop test5
 9 main.c
 '''
-[tasks.t1]
 
+[tasks.t1]
 name= "example2"
 type= "Custom"
 output='''
 hey this is a task... but 2?
 132 main.c
 '''
-[tasks.t2]
 
+[tasks.t2]
 name= "compileScript"
 type= "Compile"
 output=true
-[tasks.t3]
 
+[tasks.t3]
 name= "Time"
 type= "Custom"
 output="Hello, World!"
+
+[tasks.t4]
+name= "tree"
+type= "Custom"
+output='''
+.
+├── main
+└── main.c
+
+1 directory, 2 files
+'''
