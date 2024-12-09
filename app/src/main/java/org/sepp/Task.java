@@ -9,7 +9,13 @@ import org.tomlj.*;
 public class Task {
   public enum TaskType {
     COMPILE,
-    CUSTOM
+    CUSTOM;
+
+    @Override
+    public String toString() {
+      if (this == COMPILE) return "Compile";
+      return "Custom";
+    }
   }
 
   public String name;

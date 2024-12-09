@@ -1,0 +1,35 @@
+config_name: "test"
+
+[tasks]
+
+[tasks.t0]
+
+name= "example"
+type= "Custom"
+output='''
+hey this is a task
+loop test1
+loop test2
+loop test3
+loop test4
+loop test5
+9 main.c
+'''
+[tasks.t1]
+
+name= "example2"
+type= "Custom"
+output='''
+hey this is a task... but 2?
+132 main.c
+'''
+[tasks.t2]
+
+name= "compileScript"
+type= "Compile"
+output=true
+[tasks.t3]
+
+name= "Time"
+type= "Custom"
+output="Hello, World!"

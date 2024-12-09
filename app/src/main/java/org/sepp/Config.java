@@ -3,10 +3,29 @@ package org.sepp;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.sepp.Task.TaskType;
 import org.tomlj.*;
 
+import net.harawata.appdirs.*;
+
 public class Config {
+  public static File configsPath = getConfigPath();
+
+  private static File getConfigPath(){
+    AppDirs ad = AppDirsFactory.getInstance();
+    String path =ad.getUserConfigDir("automarker", null, null);
+    File f = new File(path);
+    if (!f.exists()){
+      f.mkdirs();
+    }
+    return f;
+  }
+
   public String name;
   public ArrayList<Task> tasks;
 
@@ -30,22 +49,81 @@ public class Config {
       throw new Exception("Run directory is not a folder");
     }
 
+    // TODO: remove this later, or not
+    clearOutputs(folder);
+
     File folders[] = folder.listFiles(File::isDirectory);
     for (int i = 0; i < folders.length; i++) {
-      ArrayList<String>[] outputs = new ArrayList[taskCount];
+      // how did we get to unsafe java
+      ArrayList<String>[] outputs =  new ArrayList[taskCount];
       for (int j = 0; j < taskCount; j++) {
         Task task = tasks.get(j);
         try{
           outputs[j] = task.run(folders[i]);
-          System.out.println("Task: "+j + "\nname: " + task.name);
-        outputs[j].forEach((str)->System.out.println("\t"+str));
+        // outputs[j].forEach((str)->System.out.println("\t"+str));
         } catch (Exception e){
+          // override output
+          outputs[j] = new ArrayList<>(Arrays.asList("Failed to run task")); // single list
           System.err.println("Exception error while running task #"+j +" name: " +task.name + "\n" + e.getMessage());
         }
       }
 
-      // TODO: create toml file
+      // create the toml file
+      writeOutputs(folders[i], outputs); // this may throw exceptions
+
     }
+  }
+
+  private void clearOutputs(File rootdir) throws IOException{
+    for (File projectdir : rootdir.listFiles(File::isDirectory)) {
+      File output = new File(projectdir, "output.toml");
+      if(output.exists()){
+        output.delete();
+      }
+    }
+  }
+
+  private void writeOutputs(File projectdir, ArrayList<String>[] outputs) throws IOException{
+    File outputFile = new File(projectdir, "output.toml");
+    String path = outputFile.getPath();
+    if (outputFile.exists()){
+      throw new IOException("Output file " + path + " already exists");
+    }
+    outputFile.createNewFile();
+    StringBuilder sb = new StringBuilder();
+    // start with the name
+    sb.append("config_name: \""+this.name + "\"\n\n");
+
+    sb.append("[tasks]\n\n");
+
+    for (int i = 0; i < outputs.length; i++) {
+      ArrayList<String> o = outputs[i];
+      Task t = this.tasks.get(i);
+      sb.append("[tasks.t" + i + "]\n\n");
+      // this will create a faulty file if the name contains a newline
+      sb.append("name= \""+t.name+"\"\n");
+      sb.append("type= \"" +t.type + "\"\n");
+      sb.append("output=");
+      if (t.type == TaskType.COMPILE){
+        if (o.get(0).startsWith("0")){
+          sb.append("true\n");
+        } else{
+          sb.append("false\n");
+        }
+      } else if (o.size()>1){ // string block
+        sb.append("'''");
+        o.forEach(str->{
+          sb.append('\n');
+          sb.append(str);
+        });
+        sb.append("\n'''\n");
+      } else if (o.size() == 1){ // string line string
+        sb.append("\""+o.get(0)+"\"\n");
+      } else {
+        sb.append("\"\" # no output");
+      }
+    }
+    Files.writeString(Path.of(path), sb.toString());
   }
 
   public void addTask(Task task) {
@@ -94,6 +172,32 @@ public class Config {
     }
 
     return newconfig;
+  }
+
+  public static File getPath(String name){
+    // TODO: clean name for erroneous text
+    return new File(configsPath, name+".toml");
+  }
+
+  /// bool indicates success or failure
+  public Boolean save(Boolean override){
+    File f = getPath(this.name);
+    if (f.exists() && !override){
+      return false;
+    }
+
+    try{
+      storeConfig(f.getPath());
+      return true;
+    }
+    catch(IOException e){
+      return false;
+    }
+  }
+  
+  public static Config load(String name) throws IOException{
+    File f = getPath(name);
+    return loadFromFile(f);
   }
 
   public void storeConfig(String path) throws IOException {

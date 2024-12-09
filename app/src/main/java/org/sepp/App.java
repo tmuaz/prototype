@@ -54,9 +54,8 @@ public class App {
 
       // attempt to get our config
       if (line.hasOption("load")) {
-        File configFile = new File(line.getOptionValue("load"));
         try {
-          config = Config.loadFromFile(configFile);
+          config = Config.load(line.getOptionValue("load"));
         } catch (Exception e) {
           System.err.println("Could not load config.\nError: " + e.getMessage());
           System.exit(1);
@@ -136,12 +135,10 @@ public class App {
     }
 
     if (saveConfig) {
-      // throw new RuntimeException("Not implemented");
-      /* try {
-        config.storeConfig("path");
-      } catch (IOException e) {
-        System.err.println("Failed to save config.\nError: " + e.getMessage());
-      } */
+      System.out.println("Saved config");
+      config.save(true);
     }
+
+    System.out.println("Finish run");
   }
 }
