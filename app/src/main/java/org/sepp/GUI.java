@@ -14,6 +14,8 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Prototype");
+        
+        StackPane layout = new StackPane();
         Scene scene = new Scene (layout, 300, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
