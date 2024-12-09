@@ -92,7 +92,7 @@ public class Config {
     outputFile.createNewFile();
     StringBuilder sb = new StringBuilder();
     // start with the name
-    sb.append("config_name: \""+this.name + "\"\n\n");
+    sb.append("config_name= \""+this.name + "\"\n\n");
 
     sb.append("[tasks]\n\n");
 

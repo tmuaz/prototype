@@ -28,6 +28,7 @@ public class Cli {
     this.options.addOption("v", "test", false, "this is a test");
     this.options.addOption("t", "title", true, "Set title of configuration");
     this.options.addOption("r", "run", true, "Directory to run in");
+    this.options.addOption("li", "list", false, "list config files");
     this.options.addOption(
         Option.builder("a")
             .longOpt("add-task")
