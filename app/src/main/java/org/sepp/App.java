@@ -12,6 +12,11 @@ import org.apache.commons.cli.ParseException;
 public class App {
 
   public static void main(String[] args) {
+    // to nahir: do check to run cli/gui
+    runCli(args);
+  }
+
+  public static void runCli(String[] args) {
     // this is the config we are goin to work with
     Config config = null;
     // get our Cli singleton
@@ -81,7 +86,8 @@ public class App {
           System.exit(1);
         }
 
-        // Verify that file exists and is a file, this is scoped to ensure that shfile isn't
+        // Verify that file exists and is a file, this is scoped to ensure that shfile
+        // isn't
         // accessed anywhere else
         {
           File shfile = new File(taskstr[2]);
@@ -141,4 +147,5 @@ public class App {
 
     System.out.println("Finish run");
   }
+
 }
