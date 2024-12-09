@@ -16,9 +16,8 @@ public class GUI extends Application {
         primaryStage.setTitle("Prototype");
         
         StackPane layout = new StackPane();
-        Scene scene = new Scene (layout, 300, 200);
+        Scene scene = new Scene (layout, 1024, 768);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
 }
