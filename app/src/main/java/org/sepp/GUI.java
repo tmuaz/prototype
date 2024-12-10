@@ -1,11 +1,16 @@
 package org.sepp;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import org.checkerframework.checker.units.qual.A;
 
 public class GUI extends Application {
 
@@ -72,14 +77,50 @@ public class GUI extends Application {
         //Creates the original Layout of GUI
         BorderPane layout = new BorderPane();
 
-        //Makes a split down the middle with left and right in GUI
-        SplitPane splitPane = new SplitPane();
-        AnchorPane left = new AnchorPane();
-        AnchorPane right = new AnchorPane();
-        splitPane.getItems().addAll(left,right);
+        //root acts as the main background for list view and the output
+        AnchorPane root = new AnchorPane();
+
+        //Splits the listView and VBox
+        HBox hBox = new HBox();
+
+        //All items in the listView
+        ListView<String> listView = new ListView<>();
+
+        //Where the output will be (text and project name)
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        //Current project name
+        Label projectName = new Label("Project name");
+
+        //Where the text will be displayed
+        AnchorPane miniPane = new AnchorPane();
+
+        //output text
+        Text output = new Text("1. Task name");
+        AnchorPane.setTopAnchor(output, 0.0);
+        AnchorPane.setLeftAnchor(output, 0.0);
+
+        //Puts the text into the Anchor pane
+        miniPane.getChildren().add(output);
+
+        //Puts the project name and anchor pane (which holds the text) into VBOX
+        vBox.getChildren().addAll(projectName, miniPane);
+
+        //Separates the listView and VBOX
+        hBox.getChildren().addAll(listView, vBox);
+
+        //Finally puts everything into a single anchorpane
+        root.getChildren().add(hBox);
+
+        AnchorPane.setTopAnchor(hBox, 0.0);
+        AnchorPane.setBottomAnchor(hBox, 0.0);
+        AnchorPane.setRightAnchor(hBox, 0.0);
+        AnchorPane.setLeftAnchor(hBox, 0.0);
+
 
         //Formats where the menu bar and split should go inside GUI
-        layout.setCenter(splitPane);
+        layout.setCenter(root);
         layout.setTop(menuBar);
 
         //Builds scene
