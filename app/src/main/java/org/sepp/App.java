@@ -37,6 +37,16 @@ public class App {
         return;
       }
 
+      if (line.hasOption("li")) {
+        String[] names = Config.configsPath.list();
+        if (names.length > 0) {
+          System.out.println("Configs:");
+        }
+        var filtered = Arrays.stream(names).filter(str -> str.endsWith(".toml"));
+        filtered.forEach(str -> System.out.println("  - " + str.substring(0, str.length() - 5)));
+        return;
+      }
+
       // 2. Diff option
       if (line.hasOption("diff")) {
         String[] diffArgs = line.getOptionValues("diff");
