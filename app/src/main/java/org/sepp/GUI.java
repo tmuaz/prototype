@@ -1,14 +1,13 @@
 package org.sepp;
 
 import java.io.File;
+import java.io.IOException;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -56,18 +55,48 @@ public class GUI extends Application {
     MenuItem saveAs = new MenuItem("Save As...");
     MenuItem close = new MenuItem("Close");
     MenuItem pref = new MenuItem("Preferences...");
+    MenuItem quit = new MenuItem("Quit");
 
-    loadConfig.getItems().addAll(context.getConfigFileNames().stream().map(MenuItem::new).toList());
+    loadConfig.getItems().addAll(context.getConfigFileNames().stream().map(str ->{
+      MenuItem citem = new MenuItem(str);
+      citem.setOnAction(e->{
+        Config c;
+        try{
+          context.config = Config.load(str);
+        } catch (IOException ex) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Failed to load config \""+str+"\"");
+          alert.setHeaderText(null);
+          alert.setContentText(ex.getMessage());
+          alert.showAndWait();
+        }
+      });
+      return citem;
+    }).toList());
     loadConfig.getItems().add(new MenuItem("Browse..."));
 
     // Retrieves all config menu items into the configMenu
     configMenu
         .getItems()
-        .addAll(newConfig, loadConfig, save, saveAs, new SeparatorMenuItem(), pref);
+        .addAll(newConfig, loadConfig, save, saveAs, new SeparatorMenuItem(), pref, quit);
 
     // Menu items for taskMenu
     MenuItem newTask = new MenuItem("New");
-    newTask.setOnAction(e -> newTaskPopup());
+    newTask.setOnAction(e -> {
+      if (context.config == null){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("No config selected!");
+        alert.setHeaderText(null);
+        alert.setContentText("Please select a config with: Config -> Load or create a new one");
+        alert.showAndWait();
+      } else {
+      Task t = newTaskPopup();
+      if (t != null) {
+        System.out.println(t.toString());
+      }else {
+        System.out.println("we got null");
+      }}
+    });
     MenuItem delete = new MenuItem("Delete");
 
     // Retrieves all task items into taskMenu
@@ -131,9 +160,10 @@ public class GUI extends Application {
     primaryStage.show();
   }
 
-  private void newTaskPopup() {
+  private Task newTaskPopup() {
     Stage newTaskPopup = new Stage();
     newTaskPopup.setTitle("New task");
+    Insets padding = new Insets(10,10,10,10);
 
     TextField taskNameField = new TextField();
     taskNameField.setPromptText("Enter the task name");
@@ -145,32 +175,53 @@ public class GUI extends Application {
     TextArea input = new TextArea();
     input.setPromptText("Enter shell script");
     input.setFont(Font.font("Monospaced"));
+    input.setMaxHeight(Double.MAX_VALUE);
+    input.setMaxWidth(Double.MAX_VALUE);
+    GridPane.setVgrow(input,Priority.ALWAYS);
 
-    Button applyButton = new Button("Apply");
-    applyButton.setOnAction(
-        e -> {
-          String taskName = taskNameField.getText();
-          String decision = options.getValue();
-          String shellScript = input.getText();
 
-          newTaskPopup.close();
-        });
+    Button okButton = new Button("Ok");
+    GridPane.setMargin(okButton,padding);
+    Task[] task = {null};
+    okButton.setOnAction(e -> {
+      String taskName = taskNameField.getText();
+      if(taskName.isEmpty()){
+        taskName = "Untitled Task";
+      }
+      String type = options.getValue();
+      String shellScript = input.getText();
 
-    VBox layout = new VBox();
+      task[0] = new Task(taskName, Task.TaskType.fromString(type),shellScript);
+      newTaskPopup.close();
+    });
 
-    layout
-        .getChildren()
-        .addAll(
-            new Label("Enter task name:"),
-            taskNameField,
-            new Label("Choose option:"),
-            options,
-            new Label("Enter shell script"),
-            input,
-            applyButton);
 
-    Scene taskPopupScene = new Scene(layout, 300, 200);
+
+    GridPane layout = new GridPane();
+    Label tlabel = new Label("Task name:");
+    tlabel.setPadding(padding);
+    Label typelabel = new Label("Task Type:");
+    typelabel.setPadding(padding);
+    Label shLabel = new Label("sh script:");
+    shLabel.setPadding(padding);
+
+
+    layout.add(tlabel, 0,0);
+    layout.add(taskNameField,1,0);
+    layout.add(typelabel, 0,1);
+    layout.add(options, 1,1);
+    layout.add(shLabel, 0,2);
+    layout.add(input,1,2);
+    layout.add(okButton,0,3);
+
+    Scene taskPopupScene = new Scene(layout,420,200);
     newTaskPopup.setScene(taskPopupScene);
-    newTaskPopup.show();
+    newTaskPopup.setMinWidth(420);
+    newTaskPopup.setWidth(420);
+    newTaskPopup.setMinHeight(200);
+    newTaskPopup.setHeight(200);
+    newTaskPopup.showAndWait();
+
+    return task[0];
   }
 }
