@@ -1,8 +1,6 @@
 package org.sepp;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,7 +14,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
-
 
   Context context = new Context();
 
