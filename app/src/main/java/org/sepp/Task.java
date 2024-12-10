@@ -16,8 +16,9 @@ public class Task {
       if (this == COMPILE) return "Compile";
       return "Custom";
     }
-    public static TaskType fromString(String str){
-      if (str.toLowerCase().startsWith("compile")){
+
+    public static TaskType fromString(String str) {
+      if (str.toLowerCase().startsWith("compile")) {
         return COMPILE;
       }
       return CUSTOM;
