@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
@@ -53,6 +54,16 @@ public class GUI extends Application {
     // Menu items for file Menu
     MenuItem run = new MenuItem("Run...");
     MenuItem directory = new MenuItem("Set directory");
+
+    DirectoryChooser directoryChooser = new DirectoryChooser();
+    directoryChooser.setInitialDirectory(new File("src"));
+
+    directory.setOnAction(
+        e -> {
+          File selectedDirectory = directoryChooser.showDialog(primaryStage);
+          context.runDirectory = selectedDirectory;
+          // System.out.println(selectedDirectory.getAbsolutePath());
+        });
 
     // Retrieves all file menu items into the fileMenu
     fileMenu.getItems().addAll(run, directory);
