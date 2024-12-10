@@ -131,6 +131,7 @@ public class GUI extends Application {
     primaryStage.setScene(scene);
     primaryStage.show();
   }
+
   private void newTaskPopup() {
     Stage newTaskPopup = new Stage();
     newTaskPopup.setTitle("New task");
@@ -146,35 +147,32 @@ public class GUI extends Application {
     input.setPromptText("Enter shell script");
     input.setFont(Font.font("Monospaced"));
 
-
     Button applyButton = new Button("Apply");
-    applyButton.setOnAction(e -> {
-      String taskName = taskNameField.getText();
-      String decision = options.getValue();
-      String shellScript = input.getText();
+    applyButton.setOnAction(
+        e -> {
+          String taskName = taskNameField.getText();
+          String decision = options.getValue();
+          String shellScript = input.getText();
 
-      newTaskPopup.close();
-    });
-
-
+          newTaskPopup.close();
+        });
 
     VBox layout = new VBox();
 
-    layout.getChildren().addAll(
+    layout
+        .getChildren()
+        .addAll(
             new Label("Enter task name:"),
             taskNameField,
             new Label("Choose option:"),
             options,
             new Label("Enter shell script"),
             input,
-            applyButton
-    );
+            applyButton);
 
-    Scene taskPopupScene = new Scene(layout,300,200);
+    Scene taskPopupScene = new Scene(layout, 300, 200);
     newTaskPopup.setScene(taskPopupScene);
     newTaskPopup.show();
-
-
   }
 
   private void createConfigPopup() {
