@@ -186,14 +186,14 @@ public class Config {
     var tomls = Arrays.stream(files).filter(f-> f.getPath().endsWith(".toml"));
 
     // tries to parse file and if parsing succeeds then it is returned
-    return (File[]) tomls.filter(file -> {
+    return tomls.filter(file -> {
       try{
         loadFromFile(file);
         return true;
       } catch (IOException e) {
         return false;
       }
-    }).toArray();
+    }).toArray(File[]::new);
   }
   public Boolean save(Boolean override){
     File f = getPath(this.name);

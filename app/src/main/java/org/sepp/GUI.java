@@ -73,6 +73,7 @@ public class GUI extends Application {
         loadConfig.getItems().addAll(
                 context.getConfigFileNames().stream().map(MenuItem::new).toList()
         );
+        loadConfig.getItems().add(new MenuItem("Browse..."));
 
         //Retrieves all config menu items into the configMenu
         configMenu.getItems().addAll(
