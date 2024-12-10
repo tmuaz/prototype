@@ -23,7 +23,8 @@ public class GUI extends Application {
         Menu tasksMenu = new Menu("Tasks");
         Menu helpMenu = new Menu("Help");
 
-
+        MenuItem about = new MenuItem("About");
+        helpMenu.getItems().add(about);
 
         //Menu items for file Menu
         MenuItem run = new MenuItem("Run...");
@@ -86,7 +87,7 @@ public class GUI extends Application {
 
         //trying to get help menu to display the same text as the cli
 
-
+        about.setOnAction(event -> showhelp());
 
         //Builds scene
         Scene scene = new Scene (layout, 1024, 768);
@@ -94,5 +95,12 @@ public class GUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    private void  showhelp(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("Help content");
+        alert.setContentText("This is a help content");//ill change the msg later
+        alert.showAndWait();
 
+    }
 }

@@ -18,7 +18,7 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
@@ -27,31 +27,13 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-
-    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
-    - name: Upload test report
-      if: always()
-      uses: actions/upload-artifact@v3
+    - name: Google Java Format
+      uses: axel-op/googlejavaformat-action@v3.6.0
       with:
-        name: test-report
-        path: app/build/reports/tests/test/
-    # - name: Google Java Format
-      # You may pin to the exact commit or the version.
-      # uses: axel-op/googlejavaformat-action@fe78db8a90171b6a836449f8d0e982d5d71e5c5a
-      # uses: axel-op/googlejavaformat-action@v3.6.0
-      # with:
-      #   # Arguments for the Google Java Format executable
-      #   args: # optional, default is --replace
-      #   # Pattern to match the files to be formatted
-      #   files: # optional, default is **/*.java
-      #   # Pattern to match the files to be ignored by this action
-      #   files-excluded: # optional
+        files: '**/*.java'
+        files-excluded: 'app/src/main/java/org/sepp/Config.java'
       #   # Set to true to not commit the changes
       #   skipCommit: # optional, default is false
       #   # Version of Google Java Format to use
@@ -62,6 +44,15 @@ jobs:
       #   commitMessage: # optional, default is Google Java Format
           
 
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-report
+        path: app/build/reports/tests/test/
+    
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
     #
