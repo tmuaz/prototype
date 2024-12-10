@@ -2,13 +2,13 @@ package org.sepp;
 
 import java.io.File;
 import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -51,6 +51,7 @@ public class GUI extends Application {
 
     // Menu items for configMenu
     MenuItem newConfig = new MenuItem("Create new config");
+    newConfig.setOnAction(e -> createConfigPopup());
     Menu loadConfig = new Menu("Load config");
     MenuItem save = new MenuItem("Save");
     MenuItem saveAs = new MenuItem("Save As...");
@@ -172,5 +173,44 @@ public class GUI extends Application {
     Scene taskPopupScene = new Scene(layout, 300, 200);
     newTaskPopup.setScene(taskPopupScene);
     newTaskPopup.show();
+  }
+
+  private void createConfigPopup() {
+    Stage createConfigPopup = new Stage();
+    createConfigPopup.setTitle("Create config");
+
+    TextField configNameField = new TextField();
+    configNameField.setPromptText("Enter config name");
+
+    TextArea compileScriptField = new TextArea();
+    compileScriptField.setPromptText("Enter compile script");
+
+    Button okButton = new Button("Ok");
+
+    Label nameLabel = new Label("Config Name");
+    nameLabel.setPadding(new Insets(10,10,10,10));
+
+    Label compileScriptLabel = new Label("Compile Script");
+    compileScriptLabel.setPadding(new Insets(10,10,10,10));
+
+
+    GridPane layout = new GridPane();
+    layout.add(nameLabel, 0, 0);
+    layout.add(configNameField,1,0);
+    layout.add(compileScriptLabel,0,1);
+    layout.add(compileScriptField,1,1);
+    layout.add(okButton,1,2);
+    GridPane.setValignment(compileScriptLabel, VPos.TOP);
+    GridPane.setValignment(okButton, VPos.CENTER);
+    GridPane.setHalignment(okButton, HPos.RIGHT);
+
+
+
+    Scene configPopupScene = new Scene(layout, 600,250);
+    createConfigPopup.setScene(configPopupScene);
+    createConfigPopup.show();
+
+
+
   }
 }
