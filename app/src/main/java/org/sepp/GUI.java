@@ -1,6 +1,12 @@
 package org.sepp;
 
+import org.tomlj.*;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -133,7 +139,8 @@ public class GUI extends Application {
           } else {
             Task t = newTaskPopup();
             if (t != null) {
-              System.out.println(t.toString());
+              context.config.addTask(t);
+              getAlert("Added task", null ,"Added task \""+t.name+"\" successfully",Alert.AlertType.INFORMATION).showAndWait();
             } else {
               System.out.println("we got null");
             }
@@ -303,7 +310,7 @@ public class GUI extends Application {
     createConfigPopup.showAndWait();
 
     String name = configNameField.getText();
-    if (name != "") {
+    if (!name.isEmpty()) {
       config.name = name;
     }
     Task t = new Task("compile", Task.TaskType.COMPILE, compileScriptField.getText());
@@ -329,71 +336,6 @@ public class GUI extends Application {
 
   private void refreshConfigs() {}
 
-  private VBox getOutputs(Path path) {
-    var vBox = new VBox(20);
-
-    if (!Files.exists(path)) {
-      return vBox; // empty box
-    }
-
-    TomlParseResult toml;
-
-    try {
-      toml = Toml.parse(path);
-    } catch (IOException e) {
-      return vBox;
-    }
-
-    if (toml.hasErrors()) {
-      return vBox;
-    }
-
-    var table = toml.getTable("tasks");
-
-    for (String entry : table.keySet()) {
-      // TODO format better
-
-      GridPane gridpane = new GridPane();
-      ColumnConstraints column1 = new ColumnConstraints(80);
-      column1.setHgrow(Priority.NEVER);
-      ColumnConstraints column2 = new ColumnConstraints(100, 100, Double.MAX_VALUE);
-      column2.setHgrow(Priority.ALWAYS);
-      gridpane.getColumnConstraints().addAll(column1, column2); // first column gets any extra width
-
-      var taskTable = table.getTable(entry);
-
-      gridpane.add(new Label(" Task name"), 0, 0);
-      gridpane.add(new Label(" Type"), 0, 1);
-
-      var out = new Label(" Output");
-      out.setAlignment(Pos.TOP_LEFT);
-      gridpane.add(out, 0, 2);
-      GridPane.setValignment(out, VPos.TOP);
-
-      gridpane.add(new Label(taskTable.getString("name")), 1, 0);
-      gridpane.add(new Label(taskTable.getString("type")), 1, 1);
-
-      var taskOutput = new Text();
-      taskOutput.setText(taskTable.get("output").toString());
-
-      if (taskTable.get("output") instanceof String) {
-        if (taskTable.get("output").toString().length() == 0) {
-          taskOutput.setText("No output");
-        } else {
-          taskOutput.setFont(new Font("Courier New", out.getFont().getSize()));
-        }
-      }
-
-      gridpane.add(taskOutput, 1, 2);
-      gridpane.setStyle(
-          "-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing:"
-              + " 10; -fx-background-color: white;");
-
-      vBox.getChildren().add(gridpane);
-    }
-
-    return vBox;
-  }
 
   private VBox getOutputs(Path path) {
     var vBox = new VBox(20);
