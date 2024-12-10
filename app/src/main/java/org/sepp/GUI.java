@@ -91,7 +91,6 @@ public class GUI extends Application {
     MenuItem saveAs = new MenuItem("Save As...");
     MenuItem close = new MenuItem("Close");
     MenuItem pref = new MenuItem("Preferences...");
-    MenuItem quit = new MenuItem("Quit");
 
     loadConfig
         .getItems()
@@ -127,7 +126,7 @@ public class GUI extends Application {
     // Retrieves all config menu items into the configMenu
     configMenu
         .getItems()
-        .addAll(newConfig, loadConfig, save, saveAs, new SeparatorMenuItem(), pref, quit);
+        .addAll(newConfig, loadConfig, save, saveAs, new SeparatorMenuItem(), pref);
 
     // Menu items for taskMenu
     MenuItem newTask = new MenuItem("New");
@@ -156,39 +155,23 @@ public class GUI extends Application {
         });
     MenuItem delete = new MenuItem("Delete");
 
-    // Retrieves all task items into taskMenu
     tasksMenu.getItems().addAll(newTask, delete);
-
-    // Gathers all the menus to the menuBar
     menuBar.getMenus().addAll(fileMenu, configMenu, tasksMenu, helpMenu);
-
-    // Creates the original Layout of GUI
     BorderPane layout = new BorderPane();
 
     // root acts as the main background for list view and the output
     AnchorPane root = new AnchorPane();
-
-    // Splits the listView and VBox
     HBox hBox = new HBox(20);
-
-    // Where the output will be (text and project name)
     VBox vBox = new VBox(20);
     vBox.setAlignment(Pos.TOP_CENTER);
-
-    // Current project name
     Label projectName = new Label("Project name");
-
-    // Where the text will be displayed
     AnchorPane miniPane = new AnchorPane();
 
-    // output text
     // Text output = new Text("1. Task name");
     VBox output = getOutputs(new File(""));
     AnchorPane.setTopAnchor(output, 0.0);
     AnchorPane.setLeftAnchor(output, 0.0);
     AnchorPane.setRightAnchor(output, 0.0);
-
-    // Puts the text into the Anchor pane
     miniPane.getChildren().add(output);
 
     // refresh when a new one is selected
@@ -204,7 +187,6 @@ public class GUI extends Application {
               miniPane.getChildren().set(0, noutput);
             });
 
-    // Puts the project name and anchor pane (which holds the text) into VBOX
     vBox.getChildren().addAll(projectName, miniPane);
 
     // Separates the listView and VBOX
@@ -218,12 +200,8 @@ public class GUI extends Application {
 
     // Finally puts everything into a single anchorpane
     root.getChildren().add(hBox);
-
-    // Formats where the menu bar and split should go inside GUI
     layout.setCenter(root);
     layout.setTop(menuBar);
-
-    // Builds scene
     Scene scene = new Scene(layout, 1024, 768);
     primaryStage.setTitle("Prototype");
     primaryStage.setScene(scene);
