@@ -45,6 +45,7 @@ public class GUI extends Application {
           File selectedDirectory = directoryChooser.showDialog(primaryStage);
           context.runDirectory = selectedDirectory;
           // System.out.println(selectedDirectory.getAbsolutePath());
+          // TODO: update listview
         });
 
     // Retrieves all file menu items into the fileMenu
@@ -52,9 +53,24 @@ public class GUI extends Application {
 
     // Menu items for configMenu
     MenuItem newConfig = new MenuItem("Create new config");
-    newConfig.setOnAction(e -> createConfigPopup());
+    newConfig.setOnAction(e -> {
+      context.config = createConfigPopup();
+      context.config.save(true);
+    });
     Menu loadConfig = new Menu("Load config");
     MenuItem save = new MenuItem("Save");
+    save.setOnAction(e->{
+      if(context.config != null){
+        // TODO: handle saving error
+        if(context.config.save(true)){
+          getAlert("Saved config", null, "Successfully saved config \""+context.config.name+"\"", Alert.AlertType.INFORMATION).showAndWait();
+        } else {
+          getAlert("Failed to save config", null, "Could not save config file").showAndWait();
+        };
+      } else {
+        getAlert("No config selected!", null,"Please first select/create a config").showAndWait();
+      }
+    });
     MenuItem saveAs = new MenuItem("Save As...");
     MenuItem close = new MenuItem("Close");
     MenuItem pref = new MenuItem("Preferences...");
@@ -72,12 +88,9 @@ public class GUI extends Application {
                             Config c;
                             try {
                               context.config = Config.load(str);
+                              getAlert("Successfully loaded config", null, "Loaded \""+context.config.name +"\"", Alert.AlertType.INFORMATION).showAndWait();
                             } catch (IOException ex) {
-                              Alert alert = new Alert(Alert.AlertType.ERROR);
-                              alert.setTitle("Failed to load config \"" + str + "\"");
-                              alert.setHeaderText(null);
-                              alert.setContentText(ex.getMessage());
-                              alert.showAndWait();
+                              getAlert("Failed to load config \"" + str + "\"", null, ex.getMessage()).showAndWait();
                             }
                           });
                       return citem;
@@ -234,7 +247,8 @@ public class GUI extends Application {
     return task[0];
   }
 
-  private void createConfigPopup() {
+  private Config createConfigPopup() {
+    Config config = new Config();
     Stage createConfigPopup = new Stage();
     createConfigPopup.setTitle("Create config");
 
@@ -245,6 +259,7 @@ public class GUI extends Application {
     compileScriptField.setPromptText("Enter compile script");
 
     Button okButton = new Button("Ok");
+    okButton.setOnAction(e -> createConfigPopup.close());
 
     Label nameLabel = new Label("Config Name");
     nameLabel.setPadding(new Insets(10, 10, 10, 10));
@@ -258,12 +273,41 @@ public class GUI extends Application {
     layout.add(compileScriptLabel, 0, 1);
     layout.add(compileScriptField, 1, 1);
     layout.add(okButton, 1, 2);
+    GridPane.setMargin(okButton, new Insets(10,10,10,10));
     GridPane.setValignment(compileScriptLabel, VPos.TOP);
     GridPane.setValignment(okButton, VPos.CENTER);
     GridPane.setHalignment(okButton, HPos.RIGHT);
 
     Scene configPopupScene = new Scene(layout, 600, 250);
     createConfigPopup.setScene(configPopupScene);
-    createConfigPopup.show();
+    createConfigPopup.showAndWait();
+
+    String name = configNameField.getText();
+    if (name != ""){
+      config.name = name;
+    }
+    Task t = new Task("compile", Task.TaskType.COMPILE, compileScriptField.getText());
+    config.addTask(t);
+    return config;
+  }
+
+  private Alert getAlert(String title, String header, String contentText){
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle(title);
+    alert.setHeaderText(header);
+    alert.setContentText(contentText);
+    return alert;
+  }
+
+  private Alert getAlert(String title, String header, String contentText, Alert.AlertType type){
+    Alert alert = new Alert(type);
+    alert.setTitle(title);
+    alert.setHeaderText(header);
+    alert.setContentText(contentText);
+    return alert;
+  }
+
+  private void refreshConfigs(){
+
   }
 }
