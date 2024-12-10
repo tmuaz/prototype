@@ -2,6 +2,7 @@ package org.sepp;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -67,9 +68,20 @@ public class GUI extends Application {
         // Gathers all the menus to the menuBar
         menuBar.getMenus().addAll(fileMenu,configMenu,tasksMenu,helpMenu);
 
+        //Creates the original Layout of GUI
         BorderPane layout = new BorderPane();
+
+        //Makes a split down the middle with left and right in GUI
+        SplitPane splitPane = new SplitPane();
+        AnchorPane left = new AnchorPane();
+        AnchorPane right = new AnchorPane();
+        splitPane.getItems().addAll(left,right);
+
+        //Formats where the menu bar and split should go inside GUI
+        layout.setCenter(splitPane);
         layout.setTop(menuBar);
 
+        //Builds scene
         Scene scene = new Scene (layout, 1024, 768);
         primaryStage.setTitle("Prototype");
         primaryStage.setScene(scene);
