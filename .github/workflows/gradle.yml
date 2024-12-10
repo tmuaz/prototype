@@ -33,7 +33,7 @@ jobs:
       uses: axel-op/googlejavaformat-action@v3.6.0
       with:
         files: '**/*.java'
-        files-excluded: 'app\src\main\java\org\sepp\Config.java'
+        files-excluded: 'app/src/main/java/org/sepp/Config.java'
       #   # Set to true to not commit the changes
       #   skipCommit: # optional, default is false
       #   # Version of Google Java Format to use
