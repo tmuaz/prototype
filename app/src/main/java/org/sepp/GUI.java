@@ -53,24 +53,33 @@ public class GUI extends Application {
 
     // Menu items for configMenu
     MenuItem newConfig = new MenuItem("Create new config");
-    newConfig.setOnAction(e -> {
-      context.config = createConfigPopup();
-      context.config.save(true);
-    });
+    newConfig.setOnAction(
+        e -> {
+          context.config = createConfigPopup();
+          context.config.save(true);
+        });
     Menu loadConfig = new Menu("Load config");
     MenuItem save = new MenuItem("Save");
-    save.setOnAction(e->{
-      if(context.config != null){
-        // TODO: handle saving error
-        if(context.config.save(true)){
-          getAlert("Saved config", null, "Successfully saved config \""+context.config.name+"\"", Alert.AlertType.INFORMATION).showAndWait();
-        } else {
-          getAlert("Failed to save config", null, "Could not save config file").showAndWait();
-        };
-      } else {
-        getAlert("No config selected!", null,"Please first select/create a config").showAndWait();
-      }
-    });
+    save.setOnAction(
+        e -> {
+          if (context.config != null) {
+            // TODO: handle saving error
+            if (context.config.save(true)) {
+              getAlert(
+                      "Saved config",
+                      null,
+                      "Successfully saved config \"" + context.config.name + "\"",
+                      Alert.AlertType.INFORMATION)
+                  .showAndWait();
+            } else {
+              getAlert("Failed to save config", null, "Could not save config file").showAndWait();
+            }
+            ;
+          } else {
+            getAlert("No config selected!", null, "Please first select/create a config")
+                .showAndWait();
+          }
+        });
     MenuItem saveAs = new MenuItem("Save As...");
     MenuItem close = new MenuItem("Close");
     MenuItem pref = new MenuItem("Preferences...");
@@ -88,9 +97,18 @@ public class GUI extends Application {
                             Config c;
                             try {
                               context.config = Config.load(str);
-                              getAlert("Successfully loaded config", null, "Loaded \""+context.config.name +"\"", Alert.AlertType.INFORMATION).showAndWait();
+                              getAlert(
+                                      "Successfully loaded config",
+                                      null,
+                                      "Loaded \"" + context.config.name + "\"",
+                                      Alert.AlertType.INFORMATION)
+                                  .showAndWait();
                             } catch (IOException ex) {
-                              getAlert("Failed to load config \"" + str + "\"", null, ex.getMessage()).showAndWait();
+                              getAlert(
+                                      "Failed to load config \"" + str + "\"",
+                                      null,
+                                      ex.getMessage())
+                                  .showAndWait();
                             }
                           });
                       return citem;
@@ -273,7 +291,7 @@ public class GUI extends Application {
     layout.add(compileScriptLabel, 0, 1);
     layout.add(compileScriptField, 1, 1);
     layout.add(okButton, 1, 2);
-    GridPane.setMargin(okButton, new Insets(10,10,10,10));
+    GridPane.setMargin(okButton, new Insets(10, 10, 10, 10));
     GridPane.setValignment(compileScriptLabel, VPos.TOP);
     GridPane.setValignment(okButton, VPos.CENTER);
     GridPane.setHalignment(okButton, HPos.RIGHT);
@@ -283,7 +301,7 @@ public class GUI extends Application {
     createConfigPopup.showAndWait();
 
     String name = configNameField.getText();
-    if (name != ""){
+    if (name != "") {
       config.name = name;
     }
     Task t = new Task("compile", Task.TaskType.COMPILE, compileScriptField.getText());
@@ -291,7 +309,7 @@ public class GUI extends Application {
     return config;
   }
 
-  private Alert getAlert(String title, String header, String contentText){
+  private Alert getAlert(String title, String header, String contentText) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
     alert.setHeaderText(header);
@@ -299,7 +317,7 @@ public class GUI extends Application {
     return alert;
   }
 
-  private Alert getAlert(String title, String header, String contentText, Alert.AlertType type){
+  private Alert getAlert(String title, String header, String contentText, Alert.AlertType type) {
     Alert alert = new Alert(type);
     alert.setTitle(title);
     alert.setHeaderText(header);
@@ -307,7 +325,5 @@ public class GUI extends Application {
     return alert;
   }
 
-  private void refreshConfigs(){
-
-  }
+  private void refreshConfigs() {}
 }
