@@ -17,7 +17,7 @@ jobs:
 
   formatting:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/main') # don't run on pull requests
+    if: startsWith(github.ref, 'refs/heads/master') # don't run on pull requests
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
