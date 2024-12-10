@@ -18,6 +18,12 @@ public class Task {
     }
   }
 
+  @Override
+  public String toString(){
+    return "name: "+this.name + "\ntype: "+ this.type + "\nsh: " + this.script;
+  }
+
+
   public String name;
   public TaskType type;
   public String script;
