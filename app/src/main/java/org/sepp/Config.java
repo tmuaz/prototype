@@ -105,7 +105,7 @@ public class Config {
       sb.append("type= \"" +t.type + "\"\n");
       sb.append("output=");
       if (t.type == TaskType.COMPILE){
-        if (o.get(0).startsWith("0")){
+        if (o.getFirst().startsWith("0")){
           sb.append("true\n");
         } else{
           sb.append("false\n");
@@ -180,6 +180,21 @@ public class Config {
   }
 
   /// bool indicates success or failure
+  public static File[] listConfigs(){
+    File[] files = configsPath.listFiles();
+    // just lists all the files and filters out the ones that aren't ending with toml
+    var tomls = Arrays.stream(files).filter(f-> f.getPath().endsWith(".toml"));
+
+    // tries to parse file and if parsing succeeds then it is returned
+    return tomls.filter(file -> {
+      try{
+        loadFromFile(file);
+        return true;
+      } catch (IOException e) {
+        return false;
+      }
+    }).toArray(File[]::new);
+  }
   public Boolean save(Boolean override){
     File f = getPath(this.name);
     if (f.exists() && !override){

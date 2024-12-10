@@ -1,4 +1,6 @@
 package org.sepp;
+
+import java.util.Arrays;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,7 +14,32 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import org.checkerframework.checker.units.qual.A;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
 public class GUI extends Application {
+    public class Context{
+        Config config = null;
+        File runDirectory = null;
+        File selected = null;
+
+        public Context(){
+
+        }
+
+        public List<String> getConfigFileNames() {
+            File[] files = Config.listConfigs();
+            return Arrays.stream(files)
+                         .map(f -> {
+                             String name = f.getName();
+                             return name.substring(0, name.length() - 5);
+                         })
+                         .toList();
+        }
+    }
+
+    Context context = new Context();
 
     public static void main (String[] args){
         launch(args);
@@ -47,14 +74,18 @@ public class GUI extends Application {
         MenuItem pref = new MenuItem("Preferences...");
         MenuItem quit = new MenuItem("Quit");
 
+
+        loadConfig.getItems().addAll(
+                context.getConfigFileNames().stream().map(MenuItem::new).toList()
+        );
+        loadConfig.getItems().add(new MenuItem("Browse..."));
+
         //Retrieves all config menu items into the configMenu
         configMenu.getItems().addAll(
                 newConfig,
                 loadConfig,
-                new SeparatorMenuItem(),
                 save,
                 saveAs,
-                close,
                 new SeparatorMenuItem(),
                 pref,
                 quit
