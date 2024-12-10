@@ -321,7 +321,7 @@ public class GUI extends Application {
     alert.setContentText(contentText);
     return alert;
   }
-  
+
   private Alert getAlert(String title, String header, String contentText, Alert.AlertType type) {
     Alert alert = new Alert(type);
     alert.setTitle(title);
@@ -332,24 +332,23 @@ public class GUI extends Application {
 
   private void refreshConfigs() {}
 
-  
   private VBox getOutputs(Path path) {
     var vBox = new VBox(20);
 
     if (!Files.exists(path)) {
-        return vBox; // empty box
+      return vBox; // empty box
     }
-    
+
     TomlParseResult toml;
 
     try {
-        toml = Toml.parse(path);
+      toml = Toml.parse(path);
     } catch (IOException e) {
-        return vBox;
+      return vBox;
     }
 
     if (toml.hasErrors()) {
-        return vBox;
+      return vBox;
     }
 
     var table = toml.getTable("tasks");
@@ -360,7 +359,7 @@ public class GUI extends Application {
       GridPane gridpane = new GridPane();
       ColumnConstraints column1 = new ColumnConstraints(80);
       column1.setHgrow(Priority.NEVER);
-      ColumnConstraints column2 = new ColumnConstraints(100,100,Double.MAX_VALUE);
+      ColumnConstraints column2 = new ColumnConstraints(100, 100, Double.MAX_VALUE);
       column2.setHgrow(Priority.ALWAYS);
       gridpane.getColumnConstraints().addAll(column1, column2); // first column gets any extra width
 
@@ -368,7 +367,7 @@ public class GUI extends Application {
 
       gridpane.add(new Label(" Task name"), 0, 0);
       gridpane.add(new Label(" Type"), 0, 1);
-      
+
       var out = new Label(" Output");
       out.setAlignment(Pos.TOP_LEFT);
       gridpane.add(out, 0, 2);
@@ -379,7 +378,7 @@ public class GUI extends Application {
 
       var taskOutput = new Text();
       taskOutput.setText(taskTable.get("output").toString());
-      
+
       if (taskTable.get("output") instanceof String) {
         if (taskTable.get("output").toString().length() == 0) {
           taskOutput.setText("No output");
@@ -389,31 +388,33 @@ public class GUI extends Application {
       }
 
       gridpane.add(taskOutput, 1, 2);
-      gridpane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing: 10; -fx-background-color: white;");
-      
+      gridpane.setStyle(
+          "-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing:"
+              + " 10; -fx-background-color: white;");
+
       vBox.getChildren().add(gridpane);
     }
 
     return vBox;
   }
-  
+
   private VBox getOutputs(Path path) {
     var vBox = new VBox(20);
 
     if (!Files.exists(path)) {
-        return vBox; // empty box
+      return vBox; // empty box
     }
-    
+
     TomlParseResult toml;
 
     try {
-        toml = Toml.parse(path);
+      toml = Toml.parse(path);
     } catch (IOException e) {
-        return vBox;
+      return vBox;
     }
 
     if (toml.hasErrors()) {
-        return vBox;
+      return vBox;
     }
 
     var table = toml.getTable("tasks");
@@ -424,7 +425,7 @@ public class GUI extends Application {
       GridPane gridpane = new GridPane();
       ColumnConstraints column1 = new ColumnConstraints(80);
       column1.setHgrow(Priority.NEVER);
-      ColumnConstraints column2 = new ColumnConstraints(100,100,Double.MAX_VALUE);
+      ColumnConstraints column2 = new ColumnConstraints(100, 100, Double.MAX_VALUE);
       column2.setHgrow(Priority.ALWAYS);
       gridpane.getColumnConstraints().addAll(column1, column2); // first column gets any extra width
 
@@ -432,7 +433,7 @@ public class GUI extends Application {
 
       gridpane.add(new Label(" Task name"), 0, 0);
       gridpane.add(new Label(" Type"), 0, 1);
-      
+
       var out = new Label(" Output");
       out.setAlignment(Pos.TOP_LEFT);
       gridpane.add(out, 0, 2);
@@ -443,7 +444,7 @@ public class GUI extends Application {
 
       var taskOutput = new Text();
       taskOutput.setText(taskTable.get("output").toString());
-      
+
       if (taskTable.get("output") instanceof String) {
         if (taskTable.get("output").toString().length() == 0) {
           taskOutput.setText("No output");
@@ -453,8 +454,10 @@ public class GUI extends Application {
       }
 
       gridpane.add(taskOutput, 1, 2);
-      gridpane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing: 10; -fx-background-color: white;");
-      
+      gridpane.setStyle(
+          "-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing:"
+              + " 10; -fx-background-color: white;");
+
       vBox.getChildren().add(gridpane);
     }
 

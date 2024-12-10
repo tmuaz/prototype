@@ -24,12 +24,12 @@ public class Context {
   }
 
   // returns empty list if unsuccessful
-  public List<File> getProjects(){
-      File[] files = runDirectory.listFiles(File::isDirectory);
-      if (files != null){
-          return Arrays.stream(files).toList();
-      } else {
-          return new ArrayList<>();
-      }
+  public List<File> getProjects() {
+    File[] files = runDirectory.listFiles(File::isDirectory);
+    if (files != null) {
+      return Arrays.stream(files).toList();
+    } else {
+      return new ArrayList<>();
+    }
   }
 }
