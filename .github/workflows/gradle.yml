@@ -14,6 +14,17 @@ on:
     branches: [ "master" ]
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Google Java Format
+      uses: axel-op/googlejavaformat-action@v3.6.0
+      with:
+        files: '**/*.java'
+        files-excluded: 'app/src/main/java/org/sepp/Config.java'
+      
   build:
 
     runs-on: ubuntu-latest
@@ -29,11 +40,7 @@ jobs:
         distribution: 'temurin'
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-    - name: Google Java Format
-      uses: axel-op/googlejavaformat-action@v3.6.0
-      with:
-        files: '**/*.java'
-        files-excluded: 'app/src/main/java/org/sepp/Config.java'
+
       #   # Set to true to not commit the changes
       #   skipCommit: # optional, default is false
       #   # Version of Google Java Format to use
