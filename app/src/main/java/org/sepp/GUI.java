@@ -188,29 +188,23 @@ public class GUI extends Application {
     Button okButton = new Button("Ok");
 
     Label nameLabel = new Label("Config Name");
-    nameLabel.setPadding(new Insets(10,10,10,10));
+    nameLabel.setPadding(new Insets(10, 10, 10, 10));
 
     Label compileScriptLabel = new Label("Compile Script");
-    compileScriptLabel.setPadding(new Insets(10,10,10,10));
-
+    compileScriptLabel.setPadding(new Insets(10, 10, 10, 10));
 
     GridPane layout = new GridPane();
     layout.add(nameLabel, 0, 0);
-    layout.add(configNameField,1,0);
-    layout.add(compileScriptLabel,0,1);
-    layout.add(compileScriptField,1,1);
-    layout.add(okButton,1,2);
+    layout.add(configNameField, 1, 0);
+    layout.add(compileScriptLabel, 0, 1);
+    layout.add(compileScriptField, 1, 1);
+    layout.add(okButton, 1, 2);
     GridPane.setValignment(compileScriptLabel, VPos.TOP);
     GridPane.setValignment(okButton, VPos.CENTER);
     GridPane.setHalignment(okButton, HPos.RIGHT);
 
-
-
-    Scene configPopupScene = new Scene(layout, 600,250);
+    Scene configPopupScene = new Scene(layout, 600, 250);
     createConfigPopup.setScene(configPopupScene);
     createConfigPopup.show();
-
-
-
   }
 }
