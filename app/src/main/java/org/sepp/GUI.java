@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.atomic.AtomicReference;
+
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -43,11 +47,14 @@ public class GUI extends Application {
 
     DirectoryChooser directoryChooser = new DirectoryChooser();
     directoryChooser.setInitialDirectory(new File("src"));
-
+    AtomicReference<ObservableList<File>> listFile = new AtomicReference<>();
+    ListView<File> listView = new ListView<>();
     directory.setOnAction(
         e -> {
           File selectedDirectory = directoryChooser.showDialog(primaryStage);
           context.runDirectory = selectedDirectory;
+          listFile.set(FXCollections.observableArrayList(context.getProjects()));
+          listView.setItems(listFile.get());
           // System.out.println(selectedDirectory.getAbsolutePath());
           // TODO: update listview
         });
@@ -167,8 +174,6 @@ public class GUI extends Application {
     // Splits the listView and VBox
     HBox hBox = new HBox(20);
 
-    // All items in the listView
-    ListView<String> listView = new ListView<>();
 
     // Where the output will be (text and project name)
     VBox vBox = new VBox(20);
