@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import org.checkerframework.checker.units.qual.A;
+import javafx.stage.DirectoryChooser;
 
 import java.io.File;
 import java.util.Arrays;
@@ -58,6 +59,14 @@ public class GUI extends Application {
         //Menu items for file Menu
         MenuItem run = new MenuItem("Run...");
         MenuItem directory = new MenuItem("Set directory");
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setInitialDirectory(new File("src"));
+
+        directory.setOnAction(e -> {
+            File selectedDirectory = directoryChooser.showDialog(primaryStage);
+            context.runDirectory = selectedDirectory;
+            //System.out.println(selectedDirectory.getAbsolutePath());
+        });
 
         //Retrieves all file menu items into the fileMenu
         fileMenu.getItems().addAll(
