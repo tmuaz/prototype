@@ -1,7 +1,6 @@
 package org.sepp;
 
 import java.io.File;
-import java.io.IOException;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -9,7 +8,10 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -124,13 +126,13 @@ public class GUI extends Application {
     AnchorPane root = new AnchorPane();
 
     // Splits the listView and VBox
-    HBox hBox = new HBox();
+    HBox hBox = new HBox(20);
 
     // All items in the listView
     ListView<String> listView = new ListView<>();
 
     // Where the output will be (text and project name)
-    VBox vBox = new VBox();
+    VBox vBox = new VBox(20);
     vBox.setAlignment(Pos.TOP_CENTER);
 
     // Current project name
@@ -140,9 +142,11 @@ public class GUI extends Application {
     AnchorPane miniPane = new AnchorPane();
 
     // output text
-    Text output = new Text("1. Task name");
+    // Text output = new Text("1. Task name");
+    VBox output = getOutputs(Paths.get("tests/project1/output.toml"));
     AnchorPane.setTopAnchor(output, 0.0);
     AnchorPane.setLeftAnchor(output, 0.0);
+    AnchorPane.setRightAnchor(output, 0.0);
 
     // Puts the text into the Anchor pane
     miniPane.getChildren().add(output);
@@ -151,15 +155,16 @@ public class GUI extends Application {
     vBox.getChildren().addAll(projectName, miniPane);
 
     // Separates the listView and VBOX
+    HBox.setHgrow(vBox, Priority.ALWAYS);
     hBox.getChildren().addAll(listView, vBox);
-
-    // Finally puts everything into a single anchorpane
-    root.getChildren().add(hBox);
 
     AnchorPane.setTopAnchor(hBox, 0.0);
     AnchorPane.setBottomAnchor(hBox, 0.0);
-    AnchorPane.setRightAnchor(hBox, 0.0);
+    AnchorPane.setRightAnchor(hBox, 20.0);
     AnchorPane.setLeftAnchor(hBox, 0.0);
+
+    // Finally puts everything into a single anchorpane
+    root.getChildren().add(hBox);
 
     // Formats where the menu bar and split should go inside GUI
     layout.setCenter(root);
@@ -265,5 +270,133 @@ public class GUI extends Application {
     Scene configPopupScene = new Scene(layout, 600, 250);
     createConfigPopup.setScene(configPopupScene);
     createConfigPopup.show();
+  }
+  
+  private VBox getOutputs(Path path) {
+    var vBox = new VBox(20);
+
+    if (!Files.exists(path)) {
+        return vBox; // empty box
+    }
+    
+    TomlParseResult toml;
+
+    try {
+        toml = Toml.parse(path);
+    } catch (IOException e) {
+        return vBox;
+    }
+
+    if (toml.hasErrors()) {
+        return vBox;
+    }
+
+    var table = toml.getTable("tasks");
+
+    for (String entry : table.keySet()) {
+      // TODO format better
+
+      GridPane gridpane = new GridPane();
+      ColumnConstraints column1 = new ColumnConstraints(80);
+      column1.setHgrow(Priority.NEVER);
+      ColumnConstraints column2 = new ColumnConstraints(100,100,Double.MAX_VALUE);
+      column2.setHgrow(Priority.ALWAYS);
+      gridpane.getColumnConstraints().addAll(column1, column2); // first column gets any extra width
+
+      var taskTable = table.getTable(entry);
+
+      gridpane.add(new Label(" Task name"), 0, 0);
+      gridpane.add(new Label(" Type"), 0, 1);
+      
+      var out = new Label(" Output");
+      out.setAlignment(Pos.TOP_LEFT);
+      gridpane.add(out, 0, 2);
+      GridPane.setValignment(out, VPos.TOP);
+
+      gridpane.add(new Label(taskTable.getString("name")), 1, 0);
+      gridpane.add(new Label(taskTable.getString("type")), 1, 1);
+
+      var taskOutput = new Text();
+      taskOutput.setText(taskTable.get("output").toString());
+      
+      if (taskTable.get("output") instanceof String) {
+        if (taskTable.get("output").toString().length() == 0) {
+          taskOutput.setText("No output");
+        } else {
+          taskOutput.setFont(new Font("Courier New", out.getFont().getSize()));
+        }
+      }
+
+      gridpane.add(taskOutput, 1, 2);
+      gridpane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing: 10; -fx-background-color: white;");
+      
+      vBox.getChildren().add(gridpane);
+    }
+
+    return vBox;
+  }
+  
+  private VBox getOutputs(Path path) {
+    var vBox = new VBox(20);
+
+    if (!Files.exists(path)) {
+        return vBox; // empty box
+    }
+    
+    TomlParseResult toml;
+
+    try {
+        toml = Toml.parse(path);
+    } catch (IOException e) {
+        return vBox;
+    }
+
+    if (toml.hasErrors()) {
+        return vBox;
+    }
+
+    var table = toml.getTable("tasks");
+
+    for (String entry : table.keySet()) {
+      // TODO format better
+
+      GridPane gridpane = new GridPane();
+      ColumnConstraints column1 = new ColumnConstraints(80);
+      column1.setHgrow(Priority.NEVER);
+      ColumnConstraints column2 = new ColumnConstraints(100,100,Double.MAX_VALUE);
+      column2.setHgrow(Priority.ALWAYS);
+      gridpane.getColumnConstraints().addAll(column1, column2); // first column gets any extra width
+
+      var taskTable = table.getTable(entry);
+
+      gridpane.add(new Label(" Task name"), 0, 0);
+      gridpane.add(new Label(" Type"), 0, 1);
+      
+      var out = new Label(" Output");
+      out.setAlignment(Pos.TOP_LEFT);
+      gridpane.add(out, 0, 2);
+      GridPane.setValignment(out, VPos.TOP);
+
+      gridpane.add(new Label(taskTable.getString("name")), 1, 0);
+      gridpane.add(new Label(taskTable.getString("type")), 1, 1);
+
+      var taskOutput = new Text();
+      taskOutput.setText(taskTable.get("output").toString());
+      
+      if (taskTable.get("output") instanceof String) {
+        if (taskTable.get("output").toString().length() == 0) {
+          taskOutput.setText("No output");
+        } else {
+          taskOutput.setFont(new Font("Courier New", out.getFont().getSize()));
+        }
+      }
+
+      gridpane.add(taskOutput, 1, 2);
+      gridpane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-spacing: 10; -fx-background-color: white;");
+      
+      vBox.getChildren().add(gridpane);
+    }
+
+    return vBox;
   }
 }
