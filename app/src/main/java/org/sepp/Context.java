@@ -1,6 +1,7 @@
 package org.sepp;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,5 +21,15 @@ public class Context {
               return name.substring(0, name.length() - 5);
             })
         .toList();
+  }
+
+  // returns empty list if unsuccessful
+  public List<File> getProjects(){
+      File[] files = runDirectory.listFiles(File::isDirectory);
+      if (files != null){
+          return Arrays.stream(files).toList();
+      } else {
+          return new ArrayList<>();
+      }
   }
 }
