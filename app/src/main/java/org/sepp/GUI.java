@@ -56,7 +56,6 @@ public class GUI extends Application {
     MenuItem saveAs = new MenuItem("Save As...");
     MenuItem close = new MenuItem("Close");
     MenuItem pref = new MenuItem("Preferences...");
-    MenuItem quit = new MenuItem("Quit");
 
     loadConfig.getItems().addAll(context.getConfigFileNames().stream().map(MenuItem::new).toList());
     loadConfig.getItems().add(new MenuItem("Browse..."));
@@ -64,7 +63,7 @@ public class GUI extends Application {
     // Retrieves all config menu items into the configMenu
     configMenu
         .getItems()
-        .addAll(newConfig, loadConfig, save, saveAs, new SeparatorMenuItem(), pref, quit);
+        .addAll(newConfig, loadConfig, save, saveAs, new SeparatorMenuItem(), pref);
 
     // Menu items for taskMenu
     MenuItem newTask = new MenuItem("New");
