@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -173,7 +172,6 @@ public class GUI extends Application {
 
     // Splits the listView and VBox
     HBox hBox = new HBox(20);
-
 
     // Where the output will be (text and project name)
     VBox vBox = new VBox(20);
