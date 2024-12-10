@@ -1,12 +1,10 @@
 package org.sepp;
 
-import org.tomlj.*;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Files;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -19,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.tomlj.*;
 
 public class GUI extends Application {
 
@@ -140,7 +139,12 @@ public class GUI extends Application {
             Task t = newTaskPopup();
             if (t != null) {
               context.config.addTask(t);
-              getAlert("Added task", null ,"Added task \""+t.name+"\" successfully",Alert.AlertType.INFORMATION).showAndWait();
+              getAlert(
+                      "Added task",
+                      null,
+                      "Added task \"" + t.name + "\" successfully",
+                      Alert.AlertType.INFORMATION)
+                  .showAndWait();
             } else {
               System.out.println("we got null");
             }
@@ -335,7 +339,6 @@ public class GUI extends Application {
   }
 
   private void refreshConfigs() {}
-
 
   private VBox getOutputs(Path path) {
     var vBox = new VBox(20);
