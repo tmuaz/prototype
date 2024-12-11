@@ -30,6 +30,8 @@ dependencies {
 
     // for getting directories
     implementation("net.harawata:appdirs:1.2.2")
+    implementation("org.apache.commons:commons-text:1.12.0")
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
