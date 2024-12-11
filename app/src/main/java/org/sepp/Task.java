@@ -16,6 +16,18 @@ public class Task {
       if (this == COMPILE) return "Compile";
       return "Custom";
     }
+
+    public static TaskType fromString(String str) {
+      if (str.toLowerCase().startsWith("compile")) {
+        return COMPILE;
+      }
+      return CUSTOM;
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "name: " + this.name + "\ntype: " + this.type + "\nsh: " + this.script;
   }
 
   public String name;
