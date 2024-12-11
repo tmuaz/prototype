@@ -173,8 +173,8 @@ public class Cli {
 
   public static Config loadConfig(String filepath) {
     try {
-      Config c= Config.load(filepath);
-      System.out.println("Loaded config \""+c.name+"\"");
+      Config c = Config.load(filepath);
+      System.out.println("Loaded config \"" + c.name + "\"");
       return c;
     } catch (Exception e) {
       System.err.println("Could not load config.\n\tError: " + e.getMessage());
@@ -183,7 +183,7 @@ public class Cli {
   }
 
   public static void addTask(Context context, String[] taskstr) {
-    if(context.config == null){
+    if (context.config == null) {
       System.out.println("No config provided");
       return;
     }
@@ -243,7 +243,7 @@ public class Cli {
 
   public static void createConfig(Context context) {
     context.config = new Config();
-    System.out.println("Created new config \""+context.config.name +"\"");
+    System.out.println("Created new config \"" + context.config.name + "\"");
     context.saveConfig = true;
   }
 
@@ -253,7 +253,7 @@ public class Cli {
       return;
     }
     context.config.name = title;
-    System.out.println("Set title to \"" +title + "\"");
+    System.out.println("Set title to \"" + title + "\"");
     context.saveConfig = true;
   }
 }

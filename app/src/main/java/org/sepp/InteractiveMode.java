@@ -1,6 +1,5 @@
 package org.sepp;
 
-import javax.sound.midi.Soundbank;
 import java.util.Scanner;
 
 public class InteractiveMode {
@@ -54,7 +53,7 @@ public class InteractiveMode {
             Cli.diffHandler(diffArgs);
             break;
           case "save":
-            if (context.config != null){
+            if (context.config != null) {
               context.config.save(true);
               System.out.println("Saved config");
             }
@@ -90,7 +89,7 @@ public class InteractiveMode {
             Cli.setTitle(context, title);
             break;
           case "run":
-            if(arguments.length<2){
+            if (arguments.length < 2) {
               System.out.println("Not enough arguments");
               break;
             }
