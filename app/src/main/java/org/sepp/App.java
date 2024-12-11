@@ -2,13 +2,11 @@ package org.sepp;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 
@@ -16,14 +14,14 @@ public class App {
   private static Logger LOGGER = Logger.getLogger("App");
 
   public static void main(String[] args) {
-    
+
     AppDirs ad = AppDirsFactory.getInstance();
     String path = ad.getUserConfigDir("automarker", null, null);
 
     String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-mm-yyyy_hh-mm-ss"));
 
     var file = new File(path + "/logs/" + date + ".txt");
-    
+
     try {
       if ((file.getParentFile().exists() || file.getParentFile().mkdir()) && file.createNewFile()) {
         LOGGER.addHandler(new FileHandler(file.getAbsolutePath()));
