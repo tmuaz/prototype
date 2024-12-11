@@ -1,26 +1,14 @@
-config_name= "test"
+config_name= "something"
 
 [tasks]
 
 
 [tasks.t0]
-name= "compile_task"
+name= "compile"
 type= "Compile"
-output=true
+output=false
 
 [tasks.t1]
-name= "tree"
+name= "A"
 type= "Custom"
-output='''
-.
-├── main
-├── main.c
-└── main.exe
-
-1 directory, 3 files
-'''
-
-[tasks.t2]
-name= "time"
-type= "Custom"
-output="" # no output
+output="123"

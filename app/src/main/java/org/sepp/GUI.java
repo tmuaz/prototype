@@ -43,16 +43,34 @@ public class GUI extends Application {
 
         // Menu items for file Menu
         MenuItem run = new MenuItem("Run...");
+        run.setOnAction(e->{
+            if (context.config == null) {
+                getAlert("No config provided!", null,"Please select a config").showAndWait();
+                return;
+            }
+            if (context.runDirectory == null){
+                getAlert("No run directory provided", null, "Please set a directory").showAndWait();
+                return;
+            }
+            try{
+            context.config.run(context.runDirectory);} catch (Exception ex){
+                getAlert("Failed to run config", null, "Error "+ex.getMessage()).showAndWait();
+            }
+        });
         MenuItem directory = new MenuItem("Set directory");
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("src"));
+//        directoryChooser.setInitialDirectory(new File("src"));
         AtomicReference<ObservableList<File>> listFile = new AtomicReference<>();
         ListView<File> listView = new ListView<>();
         directory.setOnAction(
                 e -> {
                     File selectedDirectory = directoryChooser.showDialog(primaryStage);
                     context.runDirectory = selectedDirectory;
+                    // failed to set a directory
+                    if(context.runDirectory == null){
+                        return;
+                    }
                     listFile.set(FXCollections.observableArrayList(context.getProjects()));
                     listView.setItems(listFile.get());
                     // System.out.println(selectedDirectory.getAbsolutePath());
@@ -284,6 +302,8 @@ public class GUI extends Application {
 
         Scene taskPopupScene = new Scene(layout, 420, 200);
         newTaskPopup.setScene(taskPopupScene);
+
+        // there's probably a much better way of doing this
         newTaskPopup.setMinWidth(420);
         newTaskPopup.setWidth(420);
         newTaskPopup.setMinHeight(200);

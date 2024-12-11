@@ -40,8 +40,12 @@ public class Config {
   }
 
   public void run(String path) throws Exception{
-    int taskCount = tasks.size();
     File folder = new File(path);
+    run(folder);
+  }
+
+  public void run(File folder) throws Exception{
+    int taskCount = tasks.size();
     if ( !folder.exists()){
       throw new Exception("Run directory does not exist");
     }
