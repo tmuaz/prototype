@@ -17,17 +17,16 @@ public class AppTest {
 
   @Test
   public void serializationSymmetry() {
-  
-    for (int i = 0; i<100; i++) {
+
+    for (int i = 0; i < 100; i++) {
       Config config = genRandomConfig();
 
       String serialized = config.serialize();
       Config deseralized = Config.deserialize(serialized);
-  
+
       assertTrue(config.serialize().equals(deseralized.serialize()));
       assertTrue(config.equals(deseralized));
     }
-
   }
 
   @Test
