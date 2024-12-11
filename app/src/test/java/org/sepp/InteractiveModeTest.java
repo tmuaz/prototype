@@ -2,9 +2,9 @@ package org.sepp;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 public class InteractiveModeTest {
@@ -88,6 +88,62 @@ public class InteractiveModeTest {
     System.setIn(System.in);
     System.setOut(System.out);
   }
-  // list test
+  // list
+  @Test
+  public void testList() throws IOException {
+      String list = "list\nexit\n";
+      System.setIn(new ByteArrayInputStream(list.getBytes()));
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      System.setOut(new PrintStream(out));
+
+      File testConfig = new File(Config.configsPath, "config.toml");
+      testConfig.createNewFile();
+
+
+      InteractiveMode mode = new InteractiveMode();
+      mode.start();
+      String output = out.toString();
+      assertTrue(output.contains("Configs:"));
+      assertTrue(output.contains(" - config"));
+      testConfig.delete();
+      System.setIn(System.in);
+      System.setOut(System.out);
+  }
   // run test
+  /*@Test
+  public void testRun() throws IOException {
+      String randomstring= RandomStringUtils.randomAlphabetic(10).toLowerCase();
+
+      File testScript= new File(Config.configsPath, "testScript.sh");
+      try(PrintWriter write = new PrintWriter(testScript)) {
+          write.println("!#/usr/bin/env bash");
+          write.println("echo " + randomstring);
+      }testScript.setExecutable(true);
+
+      String runinput="create\ntitle runtest\nadd-task runtest custom " + testScript.getAbsolutePath() +"\nsave\nexit\n";
+      System.setIn(new ByteArrayInputStream(runinput.getBytes()));
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      System.setOut(new PrintStream(out));
+      InteractiveMode mode = new InteractiveMode();
+      mode.start();
+      System.setIn(System.in);
+      System.setOut(System.out);
+
+      Config loadrun =Config.load("runtest");
+      try {
+          loadrun.run(Config.configsPath);
+      } catch (Exception e) {
+          assertTrue(false);
+
+      }
+      File logdir = new File(Config.configsPath, "logs");
+      File output = new File(logdir, "output.toml");
+      String outputText = Files.readString(output.toPath());
+      assertTrue(outputText.contains(randomstring));
+
+      testScript.delete();
+      output.delete();
+      logdir.delete();
+
+  }*/
 }
