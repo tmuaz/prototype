@@ -96,10 +96,10 @@ public class GUI extends Application {
           if (context.config != null) {
             if (context.config.save(true)) {
               getAlert(
-                  "Saved config",
-                  null,
-                  "Successfully saved config \"" + context.config.name + "\"",
-                  Alert.AlertType.INFORMATION)
+                      "Saved config",
+                      null,
+                      "Successfully saved config \"" + context.config.name + "\"",
+                      Alert.AlertType.INFORMATION)
                   .showAndWait();
             } else {
               getAlert("Failed to save config", null, "Could not save config file").showAndWait();
@@ -128,16 +128,16 @@ public class GUI extends Application {
                             try {
                               context.config = Config.load(str);
                               getAlert(
-                                  "Successfully loaded config",
-                                  null,
-                                  "Loaded \"" + context.config.name + "\"",
-                                  Alert.AlertType.INFORMATION)
+                                      "Successfully loaded config",
+                                      null,
+                                      "Loaded \"" + context.config.name + "\"",
+                                      Alert.AlertType.INFORMATION)
                                   .showAndWait();
                             } catch (IOException ex) {
                               getAlert(
-                                  "Failed to load config \"" + str + "\"",
-                                  null,
-                                  ex.getMessage())
+                                      "Failed to load config \"" + str + "\"",
+                                      null,
+                                      ex.getMessage())
                                   .showAndWait();
                             }
                           });
@@ -166,10 +166,10 @@ public class GUI extends Application {
             if (t != null) {
               context.config.addTask(t);
               getAlert(
-                  "Added task",
-                  null,
-                  "Added task \"" + t.name + "\" successfully",
-                  Alert.AlertType.INFORMATION)
+                      "Added task",
+                      null,
+                      "Added task \"" + t.name + "\" successfully",
+                      Alert.AlertType.INFORMATION)
                   .showAndWait();
             } else {
               System.out.println("we got null");
@@ -273,7 +273,7 @@ public class GUI extends Application {
 
     Button okButton = new Button("Ok");
     GridPane.setMargin(okButton, padding);
-    Task[] task = { null };
+    Task[] task = {null};
     okButton.setOnAction(
         e -> {
           String taskName = taskNameField.getText();
@@ -376,8 +376,7 @@ public class GUI extends Application {
     return alert;
   }
 
-  private void refreshConfigs() {
-  }
+  private void refreshConfigs() {}
 
   private VBox getOutputs(File file) {
     var vBox = new VBox(20);
@@ -444,5 +443,4 @@ public class GUI extends Application {
 
     return vBox;
   }
-
 }
