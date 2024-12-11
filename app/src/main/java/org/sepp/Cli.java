@@ -221,6 +221,10 @@ public class Cli {
   }
 
   public static void runConfig(Context context, String directory) {
+    if (context.config == null){
+      System.out.println("No config provided");
+      return;
+    }
     try {
       context.config.run(directory);
     } catch (Exception e) {
@@ -234,6 +238,10 @@ public class Cli {
   }
 
   public static void setTitle(Context context, String title) {
+    if (context.config == null){
+      System.out.println("No config provided");
+      return;
+    }
     context.config.name = title;
     context.saveConfig = true;
   }

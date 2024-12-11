@@ -235,6 +235,9 @@ public class Config {
     var newconfig = new Config(res.getString("name"));
 
     var tasklist = res.getArray("tasks");
+    if (tasklist == null){
+      throw new IOException("invalid config");
+    }
 
     for (int i = 0; i < tasklist.size(); i++) {
       newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
