@@ -1,5 +1,6 @@
 package org.sepp;
 
+import javax.sound.midi.Soundbank;
 import java.util.Scanner;
 
 public class InteractiveMode {
@@ -38,6 +39,7 @@ public class InteractiveMode {
             System.out.println("load <config> - Configuration to load");
             System.out.println("create - Create configuration");
             System.out.println("diff <skeleton-path> <submission-path>");
+            System.out.println("save - Saves current config");
             break;
           case "list":
             Cli.list();
@@ -52,13 +54,19 @@ public class InteractiveMode {
             diffArgs[1] = arguments[2];
             Cli.diffHandler(diffArgs);
             break;
+          case "save":
+            if (context.config != null){
+              context.config.save(true);
+              System.out.println("Saved config");
+            }
+            break;
           case "load":
             if(arguments.length<2){
               System.out.println("Not enough arguments");
               break;
             }
             String filePath = arguments[1];
-            Cli.loadConfig(filePath);
+            context.config = Cli.loadConfig(filePath);
             break;
           case "create":
             Cli.createConfig(context);
@@ -83,8 +91,12 @@ public class InteractiveMode {
             Cli.setTitle(context, title);
             break;
           case "run":
+            if(arguments.length<2){
+              System.out.println("Not enough arguments");
+              break;
+            }
             String directory = arguments[1];
-            Cli.setTitle(context, directory);
+            Cli.runConfig(context, directory);
             break;
           default:
             System.out.println("Unrecognised command. Type 'help' for commands");

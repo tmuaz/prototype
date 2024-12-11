@@ -147,6 +147,8 @@ public class Cli {
     String[] names = Config.configsPath.list();
     if (names.length > 0) {
       System.out.println("Configs:");
+    } else {
+      System.out.println("No configs");
     }
     var filtered = Arrays.stream(names).filter(str -> str.endsWith(".toml"));
     filtered.forEach(str -> System.out.println("  - " + str.substring(0, str.length() - 5)));
@@ -171,15 +173,20 @@ public class Cli {
 
   public static Config loadConfig(String filepath) {
     try {
-      return Config.load(filepath);
+      Config c= Config.load(filepath);
+      System.out.println("Loaded config \""+c.name+"\"");
+      return c;
     } catch (Exception e) {
-      System.err.println("Could not load config.\nError: " + e.getMessage());
-      System.exit(1);
+      System.err.println("Could not load config.\n\tError: " + e.getMessage());
       return null;
     }
   }
 
   public static void addTask(Context context, String[] taskstr) {
+    if(context.config == null){
+      System.out.println("No config provided");
+      return;
+    }
     // task needs 3 arguments
     if (taskstr.length < 3) {
       System.err.println("Invalid task, see --help");
@@ -218,6 +225,7 @@ public class Cli {
 
     // ensure config is updated
     context.saveConfig = true;
+    System.out.println("Created new task \"" + taskstr[0] + "\"");
   }
 
   public static void runConfig(Context context, String directory) {
@@ -227,6 +235,7 @@ public class Cli {
     }
     try {
       context.config.run(directory);
+      System.out.println("Finished running");
     } catch (Exception e) {
       System.err.println("Failed to run config, Error:\n\t" + e.getMessage());
     }
@@ -234,6 +243,7 @@ public class Cli {
 
   public static void createConfig(Context context) {
     context.config = new Config();
+    System.out.println("Created new config \""+context.config.name +"\"");
     context.saveConfig = true;
   }
 
@@ -243,6 +253,7 @@ public class Cli {
       return;
     }
     context.config.name = title;
+    System.out.println("Set title to \"" +title + "\"");
     context.saveConfig = true;
   }
 }

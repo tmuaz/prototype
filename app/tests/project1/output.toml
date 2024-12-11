@@ -1,9 +1,14 @@
-config_name= "Untitled configuration"
+config_name= "test"
 
 [tasks]
 
 
 [tasks.t0]
-name= "example"
+name= "hello"
 type= "Custom"
-output="Failed to run task"
+output="hey"
+
+[tasks.t1]
+name= "name"
+type= "Custom"
+output="hey"

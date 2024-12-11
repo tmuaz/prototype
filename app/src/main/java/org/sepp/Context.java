@@ -13,7 +13,7 @@ public class Context {
 
   public Context() {}
 
-  public List<String> getConfigFileNames() {
+  public static List<String> getConfigFileNames() {
     File[] files = Config.listConfigs();
     return Arrays.stream(files)
         .map(

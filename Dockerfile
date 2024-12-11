@@ -7,4 +7,4 @@ ENV DISPLAY=:0
 WORKDIR /app
 COPY . /app
 
-CMD ["./gradlew","run"]
+CMD ["./gradlew","run", "--console=plain", "--args='-i'"]
