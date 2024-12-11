@@ -1,5 +1,7 @@
 package org.sepp;
 
+import javafx.scene.layout.BorderPane;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +10,7 @@ import java.util.List;
 public class Context {
   Config config = null;
   File runDirectory = null;
+  Boolean saveConfig = false;
   File selected = null;
 
   public Context() {}
