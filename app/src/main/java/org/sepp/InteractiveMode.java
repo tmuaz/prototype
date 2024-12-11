@@ -1,17 +1,22 @@
 package org.sepp;
 
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InteractiveMode {
+  static private Logger LOGGER = Logger.getLogger("App.InteractiveMode");
   private Scanner scanner;
   private Context context;
 
   public InteractiveMode() {
+    LOGGER.log(Level.FINE, "Started in interactive mode");
     this.scanner = new Scanner(System.in);
     this.context = new Context();
   }
 
   public void start() {
+    LOGGER.log(Level.FINE, "Started in interactive mode");
     System.out.println("Type 'exit' to quit or 'help' for help");
     String command = scanner.nextLine().trim();
     while (true) {

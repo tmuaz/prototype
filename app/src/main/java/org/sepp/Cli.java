@@ -4,6 +4,9 @@
 
 package org.sepp;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +16,7 @@ import java.util.Arrays;
 import org.apache.commons.cli.*;
 
 public class Cli {
-
+  private static Logger LOGGER = Logger.getLogger("App.Cli");
   private static Cli INSTANCE = null;
 
   public CommandLineParser parser;
@@ -65,6 +68,7 @@ public class Cli {
   }
 
   public static void runCli(String[] args) {
+    LOGGER.log(Level.INFO, "Starting in CLI mode");
     // this is the config we are goin to work with
     Context context = new Context();
     // get our Cli singleton
@@ -242,6 +246,7 @@ public class Cli {
   }
 
   public static void createConfig(Context context) {
+    LOGGER.log(Level.INFO, "Created new config");
     context.config = new Config();
     System.out.println("Created new config \"" + context.config.name + "\"");
     context.saveConfig = true;
