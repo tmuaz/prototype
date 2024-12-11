@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,10 +24,12 @@ import javafx.stage.Stage;
 import org.tomlj.*;
 
 public class GUI extends Application {
+  private static Logger LOGGER = Logger.getLogger("App.GUI");
 
   Context context = new Context();
 
   public static void main(String[] args) {
+    LOGGER.log(Level.INFO, "Starting in GUI mode");
     launch(args);
   }
 
@@ -84,6 +89,7 @@ public class GUI extends Application {
     newConfig.setOnAction(
         e -> {
           context.config = createConfigPopup();
+          LOGGER.log(Level.INFO, "Created new config");
           context.config.save(true);
         });
     Menu loadConfig = new Menu("Load config");

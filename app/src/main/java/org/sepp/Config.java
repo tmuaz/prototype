@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sepp.Task.TaskType;
 import org.tomlj.*;
@@ -14,6 +16,7 @@ import org.tomlj.*;
 import net.harawata.appdirs.*;
 
 public class Config {
+  private static Logger LOGGER = Logger.getLogger("App.Config");
   public static File configsPath = getConfigPath();
 
   private static File getConfigPath(){
@@ -29,7 +32,7 @@ public class Config {
   public String name;
   public ArrayList<Task> tasks;
 
-  public Config() {
+  public Config() {;
     this.name = "Untitled configuration";
     this.tasks = new ArrayList<Task>();
   }
@@ -45,6 +48,7 @@ public class Config {
   }
 
   public void run(File folder) throws Exception{
+    LOGGER.log(Level.INFO, String.format("Running config '%s'", this.name));
     int taskCount = tasks.size();
     if ( !folder.exists()){
       throw new Exception("Run directory does not exist");
@@ -88,6 +92,7 @@ public class Config {
   }
 
   private void writeOutputs(File projectdir, ArrayList<String>[] outputs) throws IOException{
+    LOGGER.log(Level.INFO, "Writing outputs");
     File outputFile = new File(projectdir, "output.toml");
     String path = outputFile.getPath();
     if (outputFile.exists()){
@@ -163,8 +168,11 @@ public class Config {
     if (res.hasErrors()) {
       for (TomlParseError error : res.errors()) {
         System.err.println(error.toString());
-        throw new RuntimeException(String.format("Toml parsing errors when parsing:\n=====%s\n=====", text));
+        LOGGER.log(Level.SEVERE, "Error while trying to deserialize config file:");
+        LOGGER.log(Level.SEVERE, error.toString());
       }
+
+      throw new RuntimeException(String.format("Toml parsing errors when parsing:\n=====%s\n=====", text));
     }
 
     var newconfig = new Config(res.getString("name"));
@@ -172,7 +180,12 @@ public class Config {
     var tasklist = res.getArray("tasks");
 
     for (int i = 0; i < tasklist.size(); i++) {
-      newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
+      try {
+        newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
+      } catch (Exception e) {
+        LOGGER.log(Level.SEVERE, "Error while trying to deserialize config file");
+        throw new RuntimeException(e);
+      }
     }
 
     return newconfig;
@@ -221,29 +234,13 @@ public class Config {
 
   public void storeConfig(String path) throws IOException {
     FileWriter writer = new FileWriter(path);
+    LOGGER.log(Level.INFO, "Writing config " + this.name);
     writer.write(this.serialize());
     writer.close();
   }
 
   public static Config loadFromFile(File configFile) throws IOException {
-    var res = Toml.parse(configFile.toPath());
-
-    if (res.hasErrors()) {
-      throw res.errors().get(0);
-    }
-
-    var newconfig = new Config(res.getString("name"));
-
-    var tasklist = res.getArray("tasks");
-    if (tasklist == null){
-      throw new IOException("invalid config");
-    }
-
-    for (int i = 0; i < tasklist.size(); i++) {
-      newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
-    }
-
-    return newconfig;
+    return deserialize(Files.readString(configFile.toPath()));
   }
 
   // -- testing

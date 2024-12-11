@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.tomlj.*;
 
 public class Task {
@@ -24,6 +27,8 @@ public class Task {
       return CUSTOM;
     }
   }
+
+  private static Logger LOGGER = Logger.getLogger("App.Task");
 
   @Override
   public String toString() {
@@ -98,6 +103,7 @@ public class Task {
     } else if (input.getString("type").equals("custom")) {
       type = TaskType.CUSTOM;
     } else { // some issue
+      LOGGER.log(Level.SEVERE, "Error while trying to parse Task");
       throw new RuntimeException("Couldn't resolve task type.");
     }
 
