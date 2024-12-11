@@ -79,13 +79,26 @@ public class AppTest {
     return new Task(type, sb.toString());
   }
 
-  private static String genRandomString(Random rand) {
+  public static String genRandomString(Random rand) {
     // string with 10-20 characters
     int lineLen = rand.nextInt(11) + 10;
     StringBuilder sb = new StringBuilder(lineLen);
     for (int i = 0; i < lineLen; i++) {
       // generate random character with code 48-127
       char c = (char) (rand.nextInt(80) + 48);
+      sb.append(c);
+    }
+
+    return sb.toString();
+  }
+
+  public static String genRandomAlphaNum(Random rand) {
+    // string with 10-20 characters
+    int lineLen = rand.nextInt(11) + 10;
+    StringBuilder sb = new StringBuilder(lineLen);
+    for (int i = 0; i < lineLen; i++) {
+      // generate random character with code 65-90
+      char c = (char) (rand.nextInt(26) + 65);
       sb.append(c);
     }
 
