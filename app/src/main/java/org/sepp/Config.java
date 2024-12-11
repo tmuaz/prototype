@@ -19,11 +19,11 @@ public class Config {
   private static Logger LOGGER = Logger.getLogger("App.Config");
   public static File configsPath = getConfigPath();
 
-  private static File getConfigPath(){
+  private static File getConfigPath() {
     AppDirs ad = AppDirsFactory.getInstance();
-    String path =ad.getUserConfigDir("automarker", null, null);
+    String path = ad.getUserConfigDir("automarker", null, null);
     File f = new File(path);
-    if (!f.exists()){
+    if (!f.exists()) {
       f.mkdirs();
     }
     return f;
@@ -32,7 +32,8 @@ public class Config {
   public String name;
   public ArrayList<Task> tasks;
 
-  public Config() {;
+  public Config() {
+    ;
     this.name = "Untitled configuration";
     this.tasks = new ArrayList<Task>();
   }
@@ -42,37 +43,35 @@ public class Config {
     this.tasks = new ArrayList<Task>();
   }
 
-  public void run(String path) throws Exception{
+  public void run(String path) throws Exception {
     File folder = new File(path);
     run(folder);
   }
 
-  public void run(File folder) throws Exception{
+  public void run(File folder) throws Exception {
     LOGGER.log(Level.INFO, String.format("Running config '%s'", this.name));
     int taskCount = tasks.size();
-    if ( !folder.exists()){
+    if (!folder.exists()) {
       throw new Exception("Run directory does not exist");
     }
-    if (folder.isFile() ) {
+    if (folder.isFile()) {
       throw new Exception("Run directory is not a folder");
     }
-
-    // TODO: remove this later, or not
-    clearOutputs(folder);
 
     File folders[] = folder.listFiles(File::isDirectory);
     for (int i = 0; i < folders.length; i++) {
       // how did we get to unsafe java
-      ArrayList<String>[] outputs =  new ArrayList[taskCount];
+      ArrayList<String>[] outputs = new ArrayList[taskCount];
       for (int j = 0; j < taskCount; j++) {
         Task task = tasks.get(j);
-        try{
+        try {
           outputs[j] = task.run(folders[i]);
-        // outputs[j].forEach((str)->System.out.println("\t"+str));
-        } catch (Exception e){
+          // outputs[j].forEach((str)->System.out.println("\t"+str));
+        } catch (Exception e) {
           // override output
           outputs[j] = new ArrayList<>(Arrays.asList("Failed to run task")); // single list
-          System.err.println("Exception error while running task #"+j +" name: " +task.name + "\n" + e.getMessage());
+          System.err
+              .println("Exception error while running task #" + j + " name: " + task.name + "\n" + e.getMessage());
         }
       }
 
@@ -82,26 +81,29 @@ public class Config {
     }
   }
 
-  private void clearOutputs(File rootdir) throws IOException{
+  private void clearOutputs(File rootdir) throws IOException {
     for (File projectdir : rootdir.listFiles(File::isDirectory)) {
       File output = new File(projectdir, "output.toml");
-      if(output.exists()){
+      if (output.exists()) {
         output.delete();
       }
     }
   }
 
-  private void writeOutputs(File projectdir, ArrayList<String>[] outputs) throws IOException{
+  private void writeOutputs(File projectdir, ArrayList<String>[] outputs) throws IOException {
     LOGGER.log(Level.INFO, "Writing outputs");
     File outputFile = new File(projectdir, "output.toml");
     String path = outputFile.getPath();
-    if (outputFile.exists()){
-      throw new IOException("Output file " + path + " already exists");
-    }
+    // just override output file
+    /*
+     * if (outputFile.exists()){
+     * throw new IOException("Output file " + path + " already exists");
+     * }
+     */
     outputFile.createNewFile();
     StringBuilder sb = new StringBuilder();
     // start with the name
-    sb.append("config_name= \""+this.name + "\"\n\n");
+    sb.append("config_name= \"" + this.name + "\"\n\n");
 
     sb.append("[tasks]\n\n");
 
@@ -110,24 +112,24 @@ public class Config {
       Task t = this.tasks.get(i);
       sb.append("\n[tasks.t" + i + "]\n");
       // this will create a faulty file if the name contains a newline
-      sb.append("name= \""+t.name+"\"\n");
-      sb.append("type= \"" +t.type + "\"\n");
+      sb.append("name= \"" + t.name + "\"\n");
+      sb.append("type= \"" + t.type + "\"\n");
       sb.append("output=");
-      if (t.type == TaskType.COMPILE){
-        if (o.getFirst().startsWith("0")){
+      if (t.type == TaskType.COMPILE) {
+        if (o.getFirst().startsWith("0")) {
           sb.append("true\n");
-        } else{
+        } else {
           sb.append("false\n");
         }
-      } else if (o.size()>1){ // string block
+      } else if (o.size() > 1) { // string block
         sb.append("'''");
-        o.forEach(str->{
+        o.forEach(str -> {
           sb.append('\n');
           sb.append(str);
         });
         sb.append("\n'''\n");
-      } else if (o.size() == 1){ // string line string
-        sb.append("\""+o.get(0)+"\"\n");
+      } else if (o.size() == 1) { // string line string
+        sb.append("\"" + o.get(0) + "\"\n");
       } else {
         sb.append("\"\" # no output");
       }
@@ -140,7 +142,8 @@ public class Config {
   }
 
   public void removeTask(int index) {
-    if (index >= 0 && index < tasks.size()) tasks.remove(index);
+    if (index >= 0 && index < tasks.size())
+      tasks.remove(index);
   }
 
   public boolean removeTask(Task task) {
@@ -196,20 +199,21 @@ public class Config {
     return newconfig;
   }
 
-  public static File getPath(String name){
-    // TODO: clean name for erroneous text
-    return new File(configsPath, name+".toml");
+  public static File getPath(String name) {
+    name = Helper.sanitizeString(name);
+    return new File(configsPath, name + ".toml");
   }
 
   /// bool indicates success or failure
-  public static File[] listConfigs(){
+  public static File[] listConfigs() {
     File[] files = configsPath.listFiles();
-    // just lists all the files and filters out the ones that aren't ending with toml
-    var tomls = Arrays.stream(files).filter(f-> f.getPath().endsWith(".toml"));
+    // just lists all the files and filters out the ones that aren't ending with
+    // toml
+    var tomls = Arrays.stream(files).filter(f -> f.getPath().endsWith(".toml"));
 
     // tries to parse file and if parsing succeeds then it is returned
     return tomls.filter(file -> {
-      try{
+      try {
         loadFromFile(file);
         return true;
       } catch (IOException e) {
@@ -217,22 +221,22 @@ public class Config {
       }
     }).toArray(File[]::new);
   }
-  public Boolean save(Boolean override){
+
+  public Boolean save(Boolean override) {
     File f = getPath(this.name);
-    if (f.exists() && !override){
+    if (f.exists() && !override) {
       return false;
     }
 
-    try{
+    try {
       storeConfig(f.getPath());
       return true;
-    }
-    catch(IOException e){
+    } catch (IOException e) {
       return false;
     }
   }
-  
-  public static Config load(String name) throws IOException{
+
+  public static Config load(String name) throws IOException {
     File f = getPath(name);
     return loadFromFile(f);
   }
@@ -280,45 +284,116 @@ public class Config {
   static protected String EscapeToml(String input) {
     var sb = new StringBuilder();
 
-    for (int i=0; i<input.length(); i++) {
+    for (int i = 0; i < input.length(); i++) {
       switch (input.charAt(i)) {
-      case '\\': sb.append("\\\\"); break;
-      case '\"': sb.append("\\\""); break;
-      case '\u0000': sb.append("\\u0000"); break;
-      case '\u0001': sb.append("\\u0001"); break;
-      case '\u0002': sb.append("\\u0002"); break;
-      case '\u0003': sb.append("\\u0003"); break;
-      case '\u0004': sb.append("\\u0004"); break;
-      case '\u0005': sb.append("\\u0005"); break;
-      case '\u0006': sb.append("\\u0006"); break;
-      case '\u0007': sb.append("\\u0007"); break;
-      case '\u0008': sb.append("\\u0008"); break;
-      case '\u0009': sb.append("\\u0009"); break;
-      case '\n': sb.append("\\n"); break; // for some reason won't compile if i just use \u000a
-                                                // this is equivalent
-      case '\u000b': sb.append("\\u000b"); break;
-      case '\u000c': sb.append("\\u000c"); break;
-      case '\r': sb.append("\\r"); break; // same
-      case '\u000e': sb.append("\\u000e"); break;
-      case '\u000f': sb.append("\\u000f"); break;
-      case '\u0010': sb.append("\\u0010"); break;
-      case '\u0011': sb.append("\\u0011"); break;
-      case '\u0012': sb.append("\\u0012"); break;
-      case '\u0013': sb.append("\\u0013"); break;
-      case '\u0014': sb.append("\\u0014"); break;
-      case '\u0015': sb.append("\\u0015"); break;
-      case '\u0016': sb.append("\\u0016"); break;
-      case '\u0017': sb.append("\\u0017"); break;
-      case '\u0018': sb.append("\\u0018"); break;
-      case '\u0019': sb.append("\\u0019"); break;
-      case '\u001a': sb.append("\\u001a"); break;
-      case '\u001b': sb.append("\\u001b"); break;
-      case '\u001c': sb.append("\\u001c"); break;
-      case '\u001d': sb.append("\\u001d"); break;
-      case '\u001e': sb.append("\\u001e"); break;
-      case '\u001f': sb.append("\\u001f"); break;
-      case '\u007f': sb.append("\\u007f"); break;
-      default: sb.append(input.charAt(i));
+        case '\\':
+          sb.append("\\\\");
+          break;
+        case '\"':
+          sb.append("\\\"");
+          break;
+        case '\u0000':
+          sb.append("\\u0000");
+          break;
+        case '\u0001':
+          sb.append("\\u0001");
+          break;
+        case '\u0002':
+          sb.append("\\u0002");
+          break;
+        case '\u0003':
+          sb.append("\\u0003");
+          break;
+        case '\u0004':
+          sb.append("\\u0004");
+          break;
+        case '\u0005':
+          sb.append("\\u0005");
+          break;
+        case '\u0006':
+          sb.append("\\u0006");
+          break;
+        case '\u0007':
+          sb.append("\\u0007");
+          break;
+        case '\u0008':
+          sb.append("\\u0008");
+          break;
+        case '\u0009':
+          sb.append("\\u0009");
+          break;
+        case '\n':
+          sb.append("\\n");
+          break; // for some reason won't compile if i just use \u000a
+                 // this is equivalent
+        case '\u000b':
+          sb.append("\\u000b");
+          break;
+        case '\u000c':
+          sb.append("\\u000c");
+          break;
+        case '\r':
+          sb.append("\\r");
+          break; // same
+        case '\u000e':
+          sb.append("\\u000e");
+          break;
+        case '\u000f':
+          sb.append("\\u000f");
+          break;
+        case '\u0010':
+          sb.append("\\u0010");
+          break;
+        case '\u0011':
+          sb.append("\\u0011");
+          break;
+        case '\u0012':
+          sb.append("\\u0012");
+          break;
+        case '\u0013':
+          sb.append("\\u0013");
+          break;
+        case '\u0014':
+          sb.append("\\u0014");
+          break;
+        case '\u0015':
+          sb.append("\\u0015");
+          break;
+        case '\u0016':
+          sb.append("\\u0016");
+          break;
+        case '\u0017':
+          sb.append("\\u0017");
+          break;
+        case '\u0018':
+          sb.append("\\u0018");
+          break;
+        case '\u0019':
+          sb.append("\\u0019");
+          break;
+        case '\u001a':
+          sb.append("\\u001a");
+          break;
+        case '\u001b':
+          sb.append("\\u001b");
+          break;
+        case '\u001c':
+          sb.append("\\u001c");
+          break;
+        case '\u001d':
+          sb.append("\\u001d");
+          break;
+        case '\u001e':
+          sb.append("\\u001e");
+          break;
+        case '\u001f':
+          sb.append("\\u001f");
+          break;
+        case '\u007f':
+          sb.append("\\u007f");
+          break;
+        default:
+          sb.append(input.charAt(i));
       }
     }
 

@@ -63,7 +63,7 @@ public class GUI extends Application {
     MenuItem directory = new MenuItem("Set directory");
 
     DirectoryChooser directoryChooser = new DirectoryChooser();
-    //        directoryChooser.setInitialDirectory(new File("src"));
+    // directoryChooser.setInitialDirectory(new File("src"));
     AtomicReference<ObservableList<File>> listFile = new AtomicReference<>();
     ListView<File> listView = new ListView<>();
     directory.setOnAction(
@@ -76,8 +76,6 @@ public class GUI extends Application {
           }
           listFile.set(FXCollections.observableArrayList(context.getProjects()));
           listView.setItems(listFile.get());
-          // System.out.println(selectedDirectory.getAbsolutePath());
-          // TODO: update listview
         });
 
     // Retrieves all file menu items into the fileMenu
@@ -96,13 +94,12 @@ public class GUI extends Application {
     save.setOnAction(
         e -> {
           if (context.config != null) {
-            // TODO: handle saving error
             if (context.config.save(true)) {
               getAlert(
-                      "Saved config",
-                      null,
-                      "Successfully saved config \"" + context.config.name + "\"",
-                      Alert.AlertType.INFORMATION)
+                  "Saved config",
+                  null,
+                  "Successfully saved config \"" + context.config.name + "\"",
+                  Alert.AlertType.INFORMATION)
                   .showAndWait();
             } else {
               getAlert("Failed to save config", null, "Could not save config file").showAndWait();
@@ -131,16 +128,16 @@ public class GUI extends Application {
                             try {
                               context.config = Config.load(str);
                               getAlert(
-                                      "Successfully loaded config",
-                                      null,
-                                      "Loaded \"" + context.config.name + "\"",
-                                      Alert.AlertType.INFORMATION)
+                                  "Successfully loaded config",
+                                  null,
+                                  "Loaded \"" + context.config.name + "\"",
+                                  Alert.AlertType.INFORMATION)
                                   .showAndWait();
                             } catch (IOException ex) {
                               getAlert(
-                                      "Failed to load config \"" + str + "\"",
-                                      null,
-                                      ex.getMessage())
+                                  "Failed to load config \"" + str + "\"",
+                                  null,
+                                  ex.getMessage())
                                   .showAndWait();
                             }
                           });
@@ -169,10 +166,10 @@ public class GUI extends Application {
             if (t != null) {
               context.config.addTask(t);
               getAlert(
-                      "Added task",
-                      null,
-                      "Added task \"" + t.name + "\" successfully",
-                      Alert.AlertType.INFORMATION)
+                  "Added task",
+                  null,
+                  "Added task \"" + t.name + "\" successfully",
+                  Alert.AlertType.INFORMATION)
                   .showAndWait();
             } else {
               System.out.println("we got null");
@@ -276,7 +273,7 @@ public class GUI extends Application {
 
     Button okButton = new Button("Ok");
     GridPane.setMargin(okButton, padding);
-    Task[] task = {null};
+    Task[] task = { null };
     okButton.setOnAction(
         e -> {
           String taskName = taskNameField.getText();
@@ -379,7 +376,8 @@ public class GUI extends Application {
     return alert;
   }
 
-  private void refreshConfigs() {}
+  private void refreshConfigs() {
+  }
 
   private VBox getOutputs(File file) {
     var vBox = new VBox(20);
@@ -404,7 +402,6 @@ public class GUI extends Application {
     var table = toml.getTable("tasks");
 
     for (String entry : table.keySet()) {
-      // TODO format better
 
       GridPane gridpane = new GridPane();
       ColumnConstraints column1 = new ColumnConstraints(80);
@@ -447,4 +444,5 @@ public class GUI extends Application {
 
     return vBox;
   }
+
 }

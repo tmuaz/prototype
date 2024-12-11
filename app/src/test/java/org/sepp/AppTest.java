@@ -10,10 +10,12 @@ import org.junit.Test;
 
 public class AppTest {
 
-  /* @Test
-  public void DiffTest() {
-    throw new RuntimeException("Not implemented");
-  } */
+  /*
+   * @Test
+   * public void DiffTest() {
+   * throw new RuntimeException("Not implemented");
+   * }
+   */
 
   @Test
   public void serializationSymmetry() {
@@ -41,7 +43,7 @@ public class AppTest {
       try {
         c1l = Config.load(c1.name);
       } catch (Exception e) {
-        //        System.out.println("Failed");
+        // System.out.println("Failed");
         continue;
       }
       assertTrue(c1.equals(c1l));
@@ -90,9 +92,4 @@ public class AppTest {
     return sb.toString();
   }
 
-  private static String sanitizeString(String str) {
-    // remove string names that can't be saved as files
-    str = str.replaceAll("[\\\\/:*<>|\"?]", "");
-    return str;
-  }
 }
