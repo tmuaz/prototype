@@ -179,6 +179,11 @@ public class Config {
 
     var tasklist = res.getArray("tasks");
 
+    if (tasklist == null) {
+      // no tasklist stored in the toml file because the task list is empty
+      return newconfig;
+    }
+
     for (int i = 0; i < tasklist.size(); i++) {
       try {
         newconfig.addTask(Task.fromTomlTable(tasklist.getTable(i)));
