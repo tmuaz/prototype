@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class InteractiveMode {
-  static private Logger LOGGER = Logger.getLogger("App.InteractiveMode");
+  private static Logger LOGGER = Logger.getLogger("App.InteractiveMode");
   private Scanner scanner;
   private Context context;
 
