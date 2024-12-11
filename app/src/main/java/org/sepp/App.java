@@ -16,8 +16,7 @@ public class App {
   private static Logger LOGGER = Logger.getLogger("App");
 
   public static void main(String[] args) {
-    // to nahir: do check to run cli/gui
-
+    
     AppDirs ad = AppDirsFactory.getInstance();
     String path = ad.getUserConfigDir("automarker", null, null);
 
