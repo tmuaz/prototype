@@ -221,7 +221,7 @@ public class Cli {
   }
 
   public static void runConfig(Context context, String directory) {
-    if (context.config == null){
+    if (context.config == null) {
       System.out.println("No config provided");
       return;
     }
@@ -238,7 +238,7 @@ public class Cli {
   }
 
   public static void setTitle(Context context, String title) {
-    if (context.config == null){
+    if (context.config == null) {
       System.out.println("No config provided");
       return;
     }
