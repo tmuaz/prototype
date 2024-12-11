@@ -7,7 +7,6 @@ public class InteractiveMode {
   private Scanner scanner;
   private Context context;
 
-
   public InteractiveMode() {
     this.scanner = new Scanner(System.in);
     this.context = new Context();
@@ -46,7 +45,7 @@ public class InteractiveMode {
             break;
           case "diff":
             String[] diffArgs = new String[2];
-            if(arguments.length<3){
+            if (arguments.length < 3) {
               System.out.println("Not enough arguments");
               break;
             }
@@ -61,7 +60,7 @@ public class InteractiveMode {
             }
             break;
           case "load":
-            if(arguments.length<2){
+            if (arguments.length < 2) {
               System.out.println("Not enough arguments");
               break;
             }
@@ -73,7 +72,7 @@ public class InteractiveMode {
             break;
           case "add-task":
             String[] taskstr = new String[3];
-            if(arguments.length<4){
+            if (arguments.length < 4) {
               System.out.println("Not enough arguments");
               break;
             }
@@ -83,7 +82,7 @@ public class InteractiveMode {
             Cli.addTask(context, taskstr);
             break;
           case "title":
-            if(arguments.length <2){
+            if (arguments.length < 2) {
               System.out.println("Not enough arguments");
               break;
             }
