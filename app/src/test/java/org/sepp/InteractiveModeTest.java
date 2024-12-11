@@ -3,11 +3,9 @@ package org.sepp;
 import static org.junit.Assert.assertTrue;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Random;
-
 import org.junit.Test;
-
-import java.nio.file.Files;;
 
 public class InteractiveModeTest {
 
@@ -138,6 +136,5 @@ public class InteractiveModeTest {
 
     output.delete();
     logdir.delete();
-
   }
 }
