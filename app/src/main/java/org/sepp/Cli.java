@@ -4,15 +4,13 @@
 
 package org.sepp;
 
-import org.apache.commons.cli.*;
-import org.checkerframework.checker.units.qual.C;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import org.apache.commons.cli.*;
 
 public class Cli {
 
@@ -32,7 +30,7 @@ public class Cli {
   public Cli() {
     this.parser = new DefaultParser();
     this.options = new Options();
-    this.options.addOption("i", "interactive", false,"Run interactive mode");
+    this.options.addOption("i", "interactive", false, "Run interactive mode");
     this.options.addOption("h", "help", false, "Prints this message");
     this.options.addOption("v", "test", false, "this is a test");
     this.options.addOption("t", "title", true, "Set title of configuration");
@@ -76,12 +74,12 @@ public class Cli {
 
     try {
       CommandLine line = cli.parse(args);
-      if (line.hasOption("interactive")){
+      if (line.hasOption("interactive")) {
         InteractiveMode im = new InteractiveMode();
         im.start();
         return;
       }
-      
+
       if (line.hasOption("help")) {
         cli.printHelp();
         return;
@@ -118,7 +116,7 @@ public class Cli {
       // adding tasks
       if (line.hasOption("add-task")) {
         String[] taskstr = line.getOptionValues("add-task");
-        addTask(context,taskstr);
+        addTask(context, taskstr);
       }
 
       // allow changing titles
@@ -143,12 +141,9 @@ public class Cli {
     }
 
     System.out.println("Finish run");
-
-
-
   }
 
-  public static void list(){
+  public static void list() {
     String[] names = Config.configsPath.list();
     if (names.length > 0) {
       System.out.println("Configs:");
@@ -157,7 +152,7 @@ public class Cli {
     filtered.forEach(str -> System.out.println("  - " + str.substring(0, str.length() - 5)));
   }
 
-  public static void diffHandler(String[] diffArgs){
+  public static void diffHandler(String[] diffArgs) {
     if (diffArgs.length != 2) {
       System.err.println("Diff command requires two file paths");
       System.exit(1);
@@ -174,7 +169,7 @@ public class Cli {
     }
   }
 
-  public static Config loadConfig(String filepath){
+  public static Config loadConfig(String filepath) {
     try {
       return Config.load(filepath);
     } catch (Exception e) {
@@ -184,12 +179,12 @@ public class Cli {
     }
   }
 
-  public static void addTask(Context context,String[] taskstr){
+  public static void addTask(Context context, String[] taskstr) {
     // task needs 3 arguments
     if (taskstr.length < 3) {
       System.err.println("Invalid task, see --help");
       System.out.println(
-              "argument length: " + taskstr.length + "\nArguments: " + Arrays.toString(taskstr));
+          "argument length: " + taskstr.length + "\nArguments: " + Arrays.toString(taskstr));
       System.exit(1);
     }
 
@@ -225,7 +220,7 @@ public class Cli {
     context.saveConfig = true;
   }
 
-  public static void runConfig(Context context, String directory){
+  public static void runConfig(Context context, String directory) {
     try {
       context.config.run(directory);
     } catch (Exception e) {
@@ -233,15 +228,13 @@ public class Cli {
     }
   }
 
-  public static void createConfig(Context context){
+  public static void createConfig(Context context) {
     context.config = new Config();
     context.saveConfig = true;
   }
 
-  public static void setTitle(Context context, String title){
+  public static void setTitle(Context context, String title) {
     context.config.name = title;
     context.saveConfig = true;
   }
-
-
 }
