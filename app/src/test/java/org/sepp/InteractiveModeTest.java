@@ -3,8 +3,6 @@ package org.sepp;
 import static org.junit.Assert.assertTrue;
 
 import java.io.*;
-
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 public class InteractiveModeTest {
@@ -88,26 +86,26 @@ public class InteractiveModeTest {
     System.setIn(System.in);
     System.setOut(System.out);
   }
+
   // list
   @Test
   public void testList() throws IOException {
-      String list = "list\nexit\n";
-      System.setIn(new ByteArrayInputStream(list.getBytes()));
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      System.setOut(new PrintStream(out));
+    String list = "list\nexit\n";
+    System.setIn(new ByteArrayInputStream(list.getBytes()));
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(out));
 
-      File testConfig = new File(Config.configsPath, "config.toml");
-      testConfig.createNewFile();
+    File testConfig = new File(Config.configsPath, "config.toml");
+    testConfig.createNewFile();
 
-
-      InteractiveMode mode = new InteractiveMode();
-      mode.start();
-      String output = out.toString();
-      assertTrue(output.contains("Configs:"));
-      assertTrue(output.contains(" - config"));
-      testConfig.delete();
-      System.setIn(System.in);
-      System.setOut(System.out);
+    InteractiveMode mode = new InteractiveMode();
+    mode.start();
+    String output = out.toString();
+    assertTrue(output.contains("Configs:"));
+    assertTrue(output.contains(" - config"));
+    testConfig.delete();
+    System.setIn(System.in);
+    System.setOut(System.out);
   }
   // run test
   /*@Test
