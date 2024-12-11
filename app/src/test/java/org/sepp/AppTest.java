@@ -3,8 +3,11 @@
  */
 package org.sepp;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.Random;
 import org.junit.Test;
 
@@ -17,19 +20,40 @@ public class AppTest {
 
   @Test
   public void serializationSymmetry() {
-    Random rand = new Random();
-    Config config = new Config(genRandomString(rand));
-
-    int taskCount = rand.nextInt(11) + 1; // 1-10 tasks
-    for (int i = 0; i < taskCount; i++) {
-      config.addTask(genRandomTask(rand));
-    }
+    Config config = genRandomConfig();
 
     String serialized = config.serialize();
     Config deseralized = Config.deserialize(serialized);
 
-    assertTrue(config.serialize().equals(deseralized.serialize()));
-    assertTrue(config.equals(deseralized));
+      assertTrue(config.serialize().equals( deseralized.serialize()));
+      assertTrue(config.equals(deseralized));
+  }
+
+  @Test
+  public void saveLoadConfig(){
+    // delete existing configs
+    for (int i = 0; i < 100; i++) {
+      Config c1 = genRandomConfig();
+      c1.name = "" + i;
+      c1.save(true);
+
+      Config c1l = null;
+      try {c1l = Config.load(c1.name);} catch (Exception e){
+//        System.out.println("Failed");
+        continue;
+      }
+      assertTrue(c1.equals(c1l));
+    }
+  }
+
+  private static Config genRandomConfig(){
+    Random rand = new Random();
+    Config config = new Config(genRandomString(rand));
+    int taskCount = rand.nextInt(11); // 0-10 tasks
+    for (int i = 0; i < taskCount; i++) {
+      config.addTask(genRandomTask(rand));
+    }
+    return config;
   }
 
   private static Task genRandomTask(Random rand) {
@@ -62,5 +86,11 @@ public class AppTest {
     }
 
     return sb.toString();
+  }
+
+  private static String sanitizeString(String str){
+    // remove string names that can't be saved as files
+    str = str.replaceAll("[\\\\/:*<>|\"?]","");
+    return str;
   }
 }
